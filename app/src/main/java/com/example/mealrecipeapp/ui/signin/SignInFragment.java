@@ -15,7 +15,9 @@ import androidx.credentials.GetCredentialRequest;
 import androidx.credentials.GetCredentialResponse;
 import androidx.credentials.exceptions.GetCredentialException;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.mealrecipeapp.MainActivity;
 import com.example.mealrecipeapp.R;
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption;
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
@@ -57,6 +59,7 @@ public class SignInFragment extends Fragment {
                         GoogleIdTokenCredential googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credentialData);
 
                         usernameText.setText(googleIdTokenCredential.getId());
+                        navigate();
                     }
 
                     @Override
@@ -66,5 +69,10 @@ public class SignInFragment extends Fragment {
                 }
             );
         });
+    }
+
+    public void navigate() {
+
+        NavHostFragment.findNavController(this).navigate(R.id.action_signInFragment_to_homeFragment);
     }
 }
