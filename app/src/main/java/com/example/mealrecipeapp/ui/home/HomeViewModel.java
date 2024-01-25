@@ -13,8 +13,8 @@ public class HomeViewModel extends ViewModel {
     private AppRepository appRepository;
     private LiveData<Resource<List<Recipe>>> recipes;
 
-    public HomeViewModel() {
-        this.appRepository = new AppRepository();
+    public HomeViewModel(AppRepository appRepository) {
+        this.appRepository = appRepository;
         this.recipes = this.appRepository.getRecipes("");
     }
 

@@ -20,16 +20,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AppRepository {
     private ApiService apiService;
-    public AppRepository() {
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-                .build();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.spoonacular.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
-                .build();
-        this.apiService = retrofit.create(ApiService.class);
+    public AppRepository(ApiService apiService) {
+        this.apiService = apiService;
     }
 
     public LiveData<Resource<List<Recipe>>> getRecipes(String query) {

@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.mealrecipeapp.R;
+import com.example.mealrecipeapp.ui.ViewModelFactory;
 
 public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
@@ -31,11 +32,13 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ViewModelFactory viewModelFactory = ViewModelFactory.getInstance();
+        homeViewModel = new ViewModelProvider(this, viewModelFactory).get(HomeViewModel.class);
 
         recipeAdapter = new RecipeAdapter();
         recipeRecyclerView = requireActivity().findViewById(R.id.recipeRecyclerView);
         recipeRecyclerView.setAdapter(recipeAdapter);
-        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+
         homeViewModel.getRecipesLiveData().observe(getViewLifecycleOwner(), resource -> {
             switch (resource.getStatus()) {
                 case SUCCESS:
