@@ -15,13 +15,19 @@ import androidx.credentials.GetCredentialRequest;
 import androidx.credentials.GetCredentialResponse;
 import androidx.credentials.exceptions.GetCredentialException;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.mealrecipeapp.MealRecipeApp;
 import com.example.mealrecipeapp.R;
+import com.example.mealrecipeapp.di.AppContainer;
+import com.example.mealrecipeapp.ui.home.HomeViewModel;
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption;
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
 
 public class SignInFragment extends Fragment {
+
+    private SignInViewModel signInViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,6 +39,8 @@ public class SignInFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        AppContainer appContainer = ((MealRecipeApp) requireActivity().getApplication()).appContainer;
+        signInViewModel = new ViewModelProvider(this, appContainer.viewModelFactory).get(SignInViewModel.class);
 
         TextView usernameText = requireActivity().findViewById(R.id.text_view_username);
 
@@ -57,7 +65,7 @@ public class SignInFragment extends Fragment {
 
                         GoogleIdTokenCredential googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credentialData);
 
-                        usernameText.setText(googleIdTokenCredential.getId());
+                        signInViewModel.saveUser(googleIdTokenCredential.getId(), googleIdTokenCredential.getDisplayName());
                         navigate();
                     }
 

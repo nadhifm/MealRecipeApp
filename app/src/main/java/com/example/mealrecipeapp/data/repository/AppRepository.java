@@ -1,5 +1,8 @@
 package com.example.mealrecipeapp.data.repository;
 
+import android.content.SharedPreferences;
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -20,8 +23,25 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AppRepository {
     private ApiService apiService;
-    public AppRepository(ApiService apiService) {
+    private SharedPreferences sharedPreferences;
+    public AppRepository(ApiService apiService, SharedPreferences sharedPreferences) {
         this.apiService = apiService;
+        this.sharedPreferences = sharedPreferences;
+    }
+
+    public void saveUser(String email, String name) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("email", email);
+        editor.putString("name", name);
+        editor.apply();
+    }
+
+    public String getEmailUser() {
+        return sharedPreferences.getString("email", "Email");
+    }
+
+    public String getNameUser() {
+        return sharedPreferences.getString("name", "Name");
     }
 
     public LiveData<Resource<List<Recipe>>> getRecipes(String query) {
