@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "804406643636",
+    "project_id": "meal-recipe-app-27ec9",
+    "storage_bucket": "meal-recipe-app-27ec9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:804406643636:android:7d2997e5b9fcb485c2c0e1",
+        "android_client_info": {
+          "package_name": "com.example.mealrecipeapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADVCqrAWdt2CwEfXz39oPrKVBsvEng-mo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

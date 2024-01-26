@@ -36,6 +36,13 @@ public class AppRepository {
         editor.apply();
     }
 
+    public void deleteUser() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove("email");
+        editor.remove("name");
+        editor.apply();
+    }
+
     public String getEmailUser() {
         return sharedPreferences.getString("email", "Email");
     }
