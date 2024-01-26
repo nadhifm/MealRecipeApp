@@ -14,7 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.mealrecipeapp.MealRecipeApp;
 import com.example.mealrecipeapp.R;
+import com.example.mealrecipeapp.di.AppContainer;
 import com.example.mealrecipeapp.ui.ViewModelFactory;
 
 public class HomeFragment extends Fragment {
@@ -32,8 +34,8 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ViewModelFactory viewModelFactory = ViewModelFactory.getInstance();
-        homeViewModel = new ViewModelProvider(this, viewModelFactory).get(HomeViewModel.class);
+        AppContainer appContainer = ((MealRecipeApp) requireActivity().getApplication()).appContainer;
+        homeViewModel = new ViewModelProvider(this, appContainer.viewModelFactory).get(HomeViewModel.class);
 
         recipeAdapter = new RecipeAdapter();
         recipeRecyclerView = requireActivity().findViewById(R.id.recipeRecyclerView);

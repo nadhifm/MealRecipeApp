@@ -1,5 +1,7 @@
 package com.example.mealrecipeapp.ui;
 
+import android.content.SharedPreferences;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -15,33 +17,18 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
-    private static ViewModelFactory instance;
-    private static AppRepository appRepository;
 
-    private ViewModelFactory(){}
+    private AppRepository appRepository;
 
-    public static synchronized ViewModelFactory getInstance() {
-        if (instance == null) {
-            OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                    .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-                    .build();
-            ApiService apiService = new Retrofit.Builder()
-                    .baseUrl("https://api.spoonacular.com/")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .client(okHttpClient)
-                    .build()
-                    .create(ApiService.class);
-            appRepository = new AppRepository(apiService);
-            instance = new ViewModelFactory();
-        }
-        return instance;
+    public ViewModelFactory(AppRepository appRepository){
+        this.appRepository = appRepository;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass, @NonNull CreationExtras extras) {
         if (modelClass.isAssignableFrom(HomeViewModel.class)) {
-            return (T) new HomeViewModel(appRepository);
+            return (T) new HomeViewModel(this.appRepository);
         } else {
             throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
         }
