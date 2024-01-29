@@ -5,13 +5,13 @@ import androidx.lifecycle.ViewModel;
 import com.example.mealrecipeapp.data.repository.AppRepository;
 
 public class SplashViewModel extends ViewModel {
-    private AppRepository appRepository;
+    private final AppRepository appRepository;
 
     public SplashViewModel(AppRepository appRepository) {
         this.appRepository = appRepository;
     }
 
-    public String checkEmailUser(){
-        return appRepository.getEmailUser();
+    public String checkUserEmail(){
+        return appRepository.getUserEmail();
     }
 }

@@ -17,12 +17,10 @@ import android.view.ViewGroup;
 import com.example.mealrecipeapp.MealRecipeApp;
 import com.example.mealrecipeapp.R;
 import com.example.mealrecipeapp.di.AppContainer;
-import com.example.mealrecipeapp.ui.signin.SignInViewModel;
 
 public class SplashFragment extends Fragment {
 
     private SplashViewModel splashViewModel;
-
     private NavController navController;
 
     @Override
@@ -40,7 +38,7 @@ public class SplashFragment extends Fragment {
         navController = NavHostFragment.findNavController(this);
 
         new Handler().postDelayed(() -> {
-            if (splashViewModel.checkEmailUser().equals("Email")) {
+            if (splashViewModel.checkUserEmail().equals("Email")) {
                 navController.navigate(R.id.action_splashFragment_to_signInFragment);
             } else {
                 navController.navigate(R.id.action_splashFragment_to_homeFragment);

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.mealrecipeapp.R;
 import com.example.mealrecipeapp.data.remote.response.Recipe;
+import com.example.mealrecipeapp.databinding.RecipeItemBinding;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     @NonNull
     @Override
     public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_item, parent, false);
+        RecipeItemBinding view = RecipeItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new RecipeViewHolder(view);
     }
 
@@ -42,20 +43,21 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     }
 
     public static class RecipeViewHolder extends RecyclerView.ViewHolder {
-        private TextView titleTextView;
-        private ImageView posterImageView;
+        private RecipeItemBinding binding;
 
-        public RecipeViewHolder(@NonNull View itemView) {
-            super(itemView);
-            titleTextView = itemView.findViewById(R.id.titileTextView);
-            posterImageView = itemView.findViewById(R.id.posterImageView);
+        public RecipeViewHolder(RecipeItemBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
 
         public void bind(Recipe recipe) {
-            titleTextView.setText(recipe.getTitle());
+            binding.titileTextView.setText(recipe.getTitle());
+            binding.voteTextView.setText(recipe.getAggregateLikes() + " likes");
+            binding.timeTextView.setText(recipe.getReadyInMinutes() + " min");
+            binding.servingTextView.setText(recipe.getServings() + " servings");
             Glide.with(itemView)
                     .load(recipe.getImage())
-                    .into(posterImageView);
+                    .into(binding.posterImageView);
         }
     }
 }

@@ -1,11 +1,9 @@
 package com.example.mealrecipeapp.ui.signin;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,7 +19,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.mealrecipeapp.MealRecipeApp;
 import com.example.mealrecipeapp.R;
 import com.example.mealrecipeapp.di.AppContainer;
-import com.example.mealrecipeapp.ui.home.HomeViewModel;
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption;
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
 
@@ -41,8 +38,6 @@ public class SignInFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         AppContainer appContainer = ((MealRecipeApp) requireActivity().getApplication()).appContainer;
         signInViewModel = new ViewModelProvider(this, appContainer.viewModelFactory).get(SignInViewModel.class);
-
-        TextView usernameText = requireActivity().findViewById(R.id.text_view_username);
 
         CredentialManager credentialManager = CredentialManager.create(requireContext());
         GetSignInWithGoogleOption googleIdOption = new GetSignInWithGoogleOption
@@ -65,13 +60,20 @@ public class SignInFragment extends Fragment {
 
                         GoogleIdTokenCredential googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credentialData);
 
-                        signInViewModel.saveUser(googleIdTokenCredential.getId(), googleIdTokenCredential.getDisplayName());
+                        String email = googleIdTokenCredential.getId();
+                        String name = googleIdTokenCredential.getDisplayName();
+                        String image = "";
+                        if (googleIdTokenCredential.getProfilePictureUri() != null) {
+                            image = googleIdTokenCredential.getProfilePictureUri().toString();
+                        }
+
+                        signInViewModel.saveUser(email, name, image);
                         navigate();
                     }
 
                     @Override
                     public void onError(@NonNull GetCredentialException e) {
-                        Log.e("///", e.getLocalizedMessage());
+
                     }
                 }
             );
@@ -79,7 +81,6 @@ public class SignInFragment extends Fragment {
     }
 
     public void navigate() {
-
         NavHostFragment.findNavController(this).navigate(R.id.action_signInFragment_to_homeFragment);
     }
 }

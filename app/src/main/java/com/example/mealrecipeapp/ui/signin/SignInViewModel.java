@@ -13,7 +13,7 @@ public class SignInViewModel extends ViewModel {
         this.appRepository = appRepository;
     }
 
-    public void saveUser(String email, String name) {
-        appRepository.saveUser(email, name);
+    public void saveUser(String email, String name, String image) {
+        appRepository.saveUser(email, name, image);
     }
 }
