@@ -1,4 +1,4 @@
-package com.example.mealrecipeapp.ui.home;
+package com.example.mealrecipeapp.ui.addmealplan;
 
 import android.util.Log;
 
@@ -11,19 +11,20 @@ import com.example.mealrecipeapp.data.repository.AppRepository;
 import com.example.mealrecipeapp.utils.Resource;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class HomeViewModel extends ViewModel {
+public class AddMealPlanViewModel extends ViewModel {
     private final AppRepository appRepository;
     private final MutableLiveData<Resource<List<Recipe>>> recipes = new MutableLiveData<>();
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private Future<?> currentJob;
 
-    public HomeViewModel(AppRepository appRepository) {
+    public AddMealPlanViewModel(AppRepository appRepository) {
         this.appRepository = appRepository;
         searchRecipes("");
     }
@@ -49,12 +50,11 @@ public class HomeViewModel extends ViewModel {
         return recipes;
     }
 
-    public String getUserName() {
-        return appRepository.getUserName();
-    }
-
-    public String getUserImage() {
-        return appRepository.getUserImage();
+    public void addMealPlan(Long date, int slot, Recipe recipe) {
+        try {
+            appRepository.addMealPlan(date, slot, recipe);
+        } catch (IOException e) {
+        }
     }
 
     @Override

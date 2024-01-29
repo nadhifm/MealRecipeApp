@@ -37,7 +37,7 @@
     </style>
 
     <style name="Rounded">
-        <item name="cornerSize">8dp</item>
+        <item name="cornerSize">16dp</item>
         <item name="cornerFamily">rounded</item>
     </style>
 </resources>

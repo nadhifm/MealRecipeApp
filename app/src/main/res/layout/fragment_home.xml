@@ -26,11 +26,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
             android:fontFamily="@font/montserrat"
             android:text="@string/what_are_you_cooking_today"
             android:textColor="@color/black"
-            android:textSize="14sp"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@+id/userImageView"
             app:layout_constraintStart_toEndOf="@+id/userImageView"
             app:layout_constraintTop_toBottomOf="@+id/nametextView" />
@@ -42,19 +41,19 @@
             android:layout_marginStart="16dp"
             android:fontFamily="@font/montserrat_medium"
             android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@+id/textView"
             app:layout_constraintStart_toEndOf="@+id/userImageView"
             app:layout_constraintTop_toTopOf="@+id/userImageView"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintVertical_chainStyle="spread_inside" />
 
         <Button
             android:id="@+id/addImageButton"
             style="?attr/materialIconButtonFilledStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             app:icon="@drawable/ic_mage_plus"
             app:layout_constraintBottom_toBottomOf="@+id/searchTextField"
             app:layout_constraintEnd_toEndOf="parent"
@@ -75,7 +74,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/userImageView"
             app:startIconContentDescription="@string/search_recipe"
-            app:startIconDrawable="@drawable/ic_search">
+            app:startIconDrawable="@drawable/ic_search"
+
+            app:shapeAppearanceOverlay="@style/Circular">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/searchEditText"

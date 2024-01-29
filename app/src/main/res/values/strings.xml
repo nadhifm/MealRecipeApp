@@ -7,4 +7,8 @@
     <string name="time">Time</string>
     <string name="search_recipe">Search Recipe</string>
     <string name="what_are_you_cooking_today">What are you cooking today?</string>
+    <string name="meal_plan">Meal Plan</string>
+    <string name="left_arrow">Left Arrow</string>
+    <string name="right_arrow">Right Arrow</string>
+    <string name="add_meal_plan">Add Meal Plan</string>
 </resources>
