@@ -17,20 +17,22 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.mealrecipeapp.MealRecipeApp;
-import com.example.mealrecipeapp.R;
+import com.example.mealrecipeapp.databinding.FragmentSignInBinding;
 import com.example.mealrecipeapp.di.AppContainer;
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption;
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
 
 public class SignInFragment extends Fragment {
 
+    private FragmentSignInBinding binding;
+
     private SignInViewModel signInViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sign_in, container, false);
+        binding = FragmentSignInBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
@@ -47,40 +49,38 @@ public class SignInFragment extends Fragment {
                 .addCredentialOption(googleIdOption)
                 .build();
 
-        requireActivity().findViewById(R.id.button_sign_in).setOnClickListener(onClick -> {
-            credentialManager.getCredentialAsync(
-                requireActivity(),
-                request,
-                null,
-                requireActivity().getMainExecutor(),
-                new CredentialManagerCallback<GetCredentialResponse, GetCredentialException>() {
-                    @Override
-                    public void onResult(GetCredentialResponse getCredentialResponse) {
-                        Bundle credentialData = getCredentialResponse.getCredential().getData();
+        binding.buttonSignIn.setOnClickListener(onClick -> credentialManager.getCredentialAsync(
+            requireActivity(),
+            request,
+            null,
+            requireActivity().getMainExecutor(),
+            new CredentialManagerCallback<GetCredentialResponse, GetCredentialException>() {
+                @Override
+                public void onResult(GetCredentialResponse getCredentialResponse) {
+                    Bundle credentialData = getCredentialResponse.getCredential().getData();
 
-                        GoogleIdTokenCredential googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credentialData);
+                    GoogleIdTokenCredential googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credentialData);
 
-                        String email = googleIdTokenCredential.getId();
-                        String name = googleIdTokenCredential.getDisplayName();
-                        String image = "";
-                        if (googleIdTokenCredential.getProfilePictureUri() != null) {
-                            image = googleIdTokenCredential.getProfilePictureUri().toString();
-                        }
-
-                        signInViewModel.saveUser(email, name, image);
-                        navigate();
+                    String email = googleIdTokenCredential.getId();
+                    String name = googleIdTokenCredential.getDisplayName();
+                    String image = "";
+                    if (googleIdTokenCredential.getProfilePictureUri() != null) {
+                        image = googleIdTokenCredential.getProfilePictureUri().toString();
                     }
 
-                    @Override
-                    public void onError(@NonNull GetCredentialException e) {
-
-                    }
+                    signInViewModel.saveUser(email, name, image);
+                    navigate();
                 }
-            );
-        });
+
+                @Override
+                public void onError(@NonNull GetCredentialException e) {
+
+                }
+            }
+        ));
     }
 
     public void navigate() {
-        NavHostFragment.findNavController(this).navigate(R.id.action_signInFragment_to_homeFragment);
+        NavHostFragment.findNavController(this).navigate(SignInFragmentDirections.actionSignInFragmentToHomeFragment());
     }
 }

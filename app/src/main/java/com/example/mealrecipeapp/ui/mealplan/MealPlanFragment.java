@@ -58,19 +58,13 @@ public class MealPlanFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
-        breakfastMealPlanAdapter = new MealPlanAdapter(mealPlan -> {
-            mealPlanViewModel.deleteMealPlan(mealPlan.getId());
-        });
+        breakfastMealPlanAdapter = new MealPlanAdapter(mealPlan -> mealPlanViewModel.deleteMealPlan(mealPlan.getId()));
         binding.breakfastRecyclerView.setAdapter(breakfastMealPlanAdapter);
 
-        lunchMealPlanAdapter = new MealPlanAdapter(mealPlan -> {
-            mealPlanViewModel.deleteMealPlan(mealPlan.getId());
-        });
+        lunchMealPlanAdapter = new MealPlanAdapter(mealPlan -> mealPlanViewModel.deleteMealPlan(mealPlan.getId()));
         binding.lunchRecyclerView.setAdapter(lunchMealPlanAdapter);
 //
-        dinnerMealPlanAdapter = new MealPlanAdapter(mealPlan -> {
-            mealPlanViewModel.deleteMealPlan(mealPlan.getId());
-        });
+        dinnerMealPlanAdapter = new MealPlanAdapter(mealPlan -> mealPlanViewModel.deleteMealPlan(mealPlan.getId()));
         binding.dinnerRecyclerView.setAdapter(dinnerMealPlanAdapter);
     }
 
@@ -110,7 +104,7 @@ public class MealPlanFragment extends Fragment {
                     List<MealPlan> lunchMealPlan = new ArrayList<>(resource.getData());
                     lunchMealPlan.removeIf(item -> item.getSlot() != 2);
                     lunchMealPlanAdapter.setMealPlans(lunchMealPlan);
-//
+
                     List<MealPlan> dinnerMealPlan = new ArrayList<>(resource.getData());
                     dinnerMealPlan.removeIf(item -> item.getSlot() != 3);
                     dinnerMealPlanAdapter.setMealPlans(dinnerMealPlan);

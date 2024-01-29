@@ -6,9 +6,8 @@
     tools:context=".ui.profile.ProfileFragment">
 
     <Button
-        android:id="@+id/button_sign_out"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Sign Out" />
+        android:text="@string/sign_out" />
 </FrameLayout>

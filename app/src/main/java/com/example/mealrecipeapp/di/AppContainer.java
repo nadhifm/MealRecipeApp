@@ -3,7 +3,6 @@ package com.example.mealrecipeapp.di;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.mealrecipeapp.R;
 import com.example.mealrecipeapp.data.remote.network.ApiService;
 import com.example.mealrecipeapp.data.repository.AppRepository;
 import com.example.mealrecipeapp.ui.ViewModelFactory;
@@ -15,11 +14,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AppContainer {
 
-    private final Context appContext;
-    public ViewModelFactory viewModelFactory;
+    public final ViewModelFactory viewModelFactory;
 
     public AppContainer(Context appContext) {
-        this.appContext = appContext;
 
         SharedPreferences sharedPreferences = appContext.getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
 

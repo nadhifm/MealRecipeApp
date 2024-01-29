@@ -1,16 +1,12 @@
 package com.example.mealrecipeapp.ui.home;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.mealrecipeapp.R;
 import com.example.mealrecipeapp.data.remote.response.Recipe;
 import com.example.mealrecipeapp.databinding.RecipeItemBinding;
 
@@ -43,7 +39,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     }
 
     public static class RecipeViewHolder extends RecyclerView.ViewHolder {
-        private RecipeItemBinding binding;
+        private final RecipeItemBinding binding;
 
         public RecipeViewHolder(RecipeItemBinding binding) {
             super(binding.getRoot());

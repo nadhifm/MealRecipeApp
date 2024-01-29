@@ -1,14 +1,12 @@
 package com.example.mealrecipeapp.ui.signin;
 
-import android.util.Log;
-
 import androidx.lifecycle.ViewModel;
 
 import com.example.mealrecipeapp.data.repository.AppRepository;
 
 public class SignInViewModel extends ViewModel {
 
-    private AppRepository appRepository;
+    private final AppRepository appRepository;
     public SignInViewModel(AppRepository appRepository) {
         this.appRepository = appRepository;
     }

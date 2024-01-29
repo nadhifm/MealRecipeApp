@@ -39,9 +39,9 @@ public class SplashFragment extends Fragment {
 
         new Handler().postDelayed(() -> {
             if (splashViewModel.checkUserEmail().equals("Email")) {
-                navController.navigate(R.id.action_splashFragment_to_signInFragment);
+                navController.navigate(SplashFragmentDirections.actionSplashFragmentToSignInFragment());
             } else {
-                navController.navigate(R.id.action_splashFragment_to_homeFragment);
+                navController.navigate(SplashFragmentDirections.actionSplashFragmentToHomeFragment());
             }
         }, 2000);
     }

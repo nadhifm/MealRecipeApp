@@ -8,7 +8,6 @@ import androidx.lifecycle.viewmodel.CreationExtras;
 import com.example.mealrecipeapp.data.repository.AppRepository;
 import com.example.mealrecipeapp.ui.addmealplan.AddMealPlanViewModel;
 import com.example.mealrecipeapp.ui.home.HomeViewModel;
-import com.example.mealrecipeapp.ui.mealplan.MealPlanFragment;
 import com.example.mealrecipeapp.ui.mealplan.MealPlanViewModel;
 import com.example.mealrecipeapp.ui.profile.ProfileViewModel;
 import com.example.mealrecipeapp.ui.signin.SignInViewModel;
@@ -16,7 +15,7 @@ import com.example.mealrecipeapp.ui.splash.SplashViewModel;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
 
-    private AppRepository appRepository;
+    private final AppRepository appRepository;
 
     public ViewModelFactory(AppRepository appRepository){
         this.appRepository = appRepository;

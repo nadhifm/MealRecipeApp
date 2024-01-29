@@ -9,7 +9,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +25,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.example.mealrecipeapp.MealRecipeApp;
-import com.example.mealrecipeapp.R;
 import com.example.mealrecipeapp.databinding.FragmentHomeBinding;
 import com.example.mealrecipeapp.di.AppContainer;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -116,19 +114,18 @@ public class HomeFragment extends Fragment {
         homeViewModel.getRecipesLiveData().observe(getViewLifecycleOwner(), resource -> {
             switch (resource.getStatus()) {
                 case SUCCESS:
-                    requireActivity().findViewById(R.id.progressBar).setVisibility(View.GONE);
-                    requireActivity().findViewById(R.id.recipeRecyclerView).setVisibility(View.VISIBLE);
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.recipeRecyclerView.setVisibility(View.VISIBLE);
                     recipeAdapter.setRecipes(resource.getData());
                     break;
                 case ERROR:
-                    requireActivity().findViewById(R.id.progressBar).setVisibility(View.GONE);
-                    requireActivity().findViewById(R.id.recipeRecyclerView).setVisibility(View.GONE);
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.recipeRecyclerView.setVisibility(View.GONE);
                     Toast.makeText(getActivity(), resource.getMessage(), Toast.LENGTH_SHORT).show();
                     break;
                 case LOADING:
-                    Log.d("//LOADING//", "LOADING");
-                    requireActivity().findViewById(R.id.recipeRecyclerView).setVisibility(View.GONE);
-                    requireActivity().findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+                    binding.recipeRecyclerView.setVisibility(View.GONE);
+                    binding.progressBar.setVisibility(View.VISIBLE);
                     break;
             }
         });

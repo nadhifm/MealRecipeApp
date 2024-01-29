@@ -1,7 +1,5 @@
 package com.example.mealrecipeapp.ui.addmealplan;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -11,7 +9,6 @@ import com.example.mealrecipeapp.data.repository.AppRepository;
 import com.example.mealrecipeapp.utils.Resource;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;

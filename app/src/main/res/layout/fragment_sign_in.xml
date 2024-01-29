@@ -8,24 +8,21 @@
     tools:context=".ui.signin.SignInFragment">
 
     <TextView
-        android:id="@+id/text_view_sign_in"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:text="Sign In"
+        android:text="@string/sign_in"
         android:textColor="@color/black"
         android:textSize="24sp"
         android:textStyle="bold" />
 
     <Button
-        android:id="@+id/button_sign_in"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:text="Sign In" />
+        android:text="@string/sign_in" />
 
     <TextView
-        android:id="@+id/text_view_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp" />

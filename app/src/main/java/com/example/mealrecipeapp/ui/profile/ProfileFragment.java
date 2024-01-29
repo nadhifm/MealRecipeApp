@@ -13,18 +13,20 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.mealrecipeapp.MealRecipeApp;
-import com.example.mealrecipeapp.R;
+import com.example.mealrecipeapp.databinding.FragmentProfileBinding;
 import com.example.mealrecipeapp.di.AppContainer;
 
 public class ProfileFragment extends Fragment {
+
+    private FragmentProfileBinding binding;
 
     private ProfileViewModel profileViewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        binding = FragmentProfileBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
@@ -33,9 +35,9 @@ public class ProfileFragment extends Fragment {
         AppContainer appContainer = ((MealRecipeApp) requireActivity().getApplication()).appContainer;
         profileViewModel = new ViewModelProvider(this, appContainer.viewModelFactory).get(ProfileViewModel.class);
 
-        requireActivity().findViewById(R.id.button_sign_out).setOnClickListener(onClick -> {
+        binding.buttonSignOut.setOnClickListener(onClick -> {
             profileViewModel.signOut();
-            NavHostFragment.findNavController(this).navigate(R.id.action_profileFragment_to_signInFragment);
+            NavHostFragment.findNavController(this).navigate(ProfileFragmentDirections.actionProfileFragmentToSignInFragment());
         });
     }
 }

@@ -1,7 +1,6 @@
 package com.example.mealrecipeapp.ui.addmealplan;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -58,9 +57,7 @@ public class AddMealPlanAdapter extends RecyclerView.Adapter<AddMealPlanAdapter.
             Glide.with(itemView)
                     .load(recipe.getImage())
                     .into(binding.posterImageView);
-            binding.addMealPlanButton.setOnClickListener(onClick -> {
-                onAddClickListener.onItemClick(recipe);
-            });
+            binding.addMealPlanButton.setOnClickListener(onClick -> onAddClickListener.onItemClick(recipe));
         }
     }
 

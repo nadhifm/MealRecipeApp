@@ -5,6 +5,14 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
@@ -15,23 +23,9 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
 import com.example.mealrecipeapp.MealRecipeApp;
-import com.example.mealrecipeapp.R;
 import com.example.mealrecipeapp.databinding.FragmentAddMealPlanBinding;
 import com.example.mealrecipeapp.di.AppContainer;
-import com.example.mealrecipeapp.ui.home.HomeViewModel;
-import com.example.mealrecipeapp.ui.home.RecipeAdapter;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.label.ImageLabeler;
@@ -71,7 +65,7 @@ public class AddMealPlanFragment extends Fragment {
                 currentUri = uri;
                 getImageLabel();
             } else {
-                Log.d("Photo Picker", "No media selected");
+
             }
         });
 
@@ -80,7 +74,7 @@ public class AddMealPlanFragment extends Fragment {
                 if (currentUri != null) {
                     getImageLabel();
                 } else {
-                    Log.d("Photo Picker", "No media selected");
+
                 }
             }
         });
@@ -119,18 +113,18 @@ public class AddMealPlanFragment extends Fragment {
         addMealPlanViewModel.getRecipesLiveData().observe(getViewLifecycleOwner(), resource -> {
             switch (resource.getStatus()) {
                 case SUCCESS:
-                    requireActivity().findViewById(R.id.progressBar).setVisibility(View.GONE);
-                    requireActivity().findViewById(R.id.recipeRecyclerView).setVisibility(View.VISIBLE);
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.recipeRecyclerView.setVisibility(View.VISIBLE);
                     addMealPlanAdapter.setRecipes(resource.getData());
                     break;
                 case ERROR:
-                    requireActivity().findViewById(R.id.progressBar).setVisibility(View.GONE);
-                    requireActivity().findViewById(R.id.recipeRecyclerView).setVisibility(View.GONE);
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.recipeRecyclerView.setVisibility(View.GONE);
                     Toast.makeText(getActivity(), resource.getMessage(), Toast.LENGTH_SHORT).show();
                     break;
                 case LOADING:
-                    requireActivity().findViewById(R.id.recipeRecyclerView).setVisibility(View.GONE);
-                    requireActivity().findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+                    binding.recipeRecyclerView.setVisibility(View.GONE);
+                    binding.progressBar.setVisibility(View.VISIBLE);
                     break;
             }
         });

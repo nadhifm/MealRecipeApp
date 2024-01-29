@@ -1,7 +1,6 @@
 package com.example.mealrecipeapp.data.repository;
 
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -56,7 +55,6 @@ public class AppRepository {
             @Override
             public void onFailure(@NonNull Call<ConnectUserResponse> call, @NonNull Throwable t) {
 
-                Log.d("//ERROR//", t.getMessage());
             }
         });
     }
