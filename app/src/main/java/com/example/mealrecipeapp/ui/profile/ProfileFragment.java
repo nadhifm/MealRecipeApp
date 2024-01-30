@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.example.mealrecipeapp.MealRecipeApp;
 import com.example.mealrecipeapp.databinding.FragmentProfileBinding;
 import com.example.mealrecipeapp.di.AppContainer;
@@ -34,6 +35,12 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         AppContainer appContainer = ((MealRecipeApp) requireActivity().getApplication()).appContainer;
         profileViewModel = new ViewModelProvider(this, appContainer.viewModelFactory).get(ProfileViewModel.class);
+
+        binding.userNameTextView.setText(profileViewModel.getUserName());
+        binding.userEmailTextView.setText(profileViewModel.getUserEmail());
+        Glide.with(requireContext())
+                .load(profileViewModel.getUserImage())
+                .into(binding.userImageView);
 
         binding.signOutButton.setOnClickListener(onClick -> {
             profileViewModel.signOut();

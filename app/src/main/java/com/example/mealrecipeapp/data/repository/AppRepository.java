@@ -72,6 +72,8 @@ public class AppRepository {
         editor.remove("email");
         editor.remove("name");
         editor.apply();
+
+        AppDatabase.databaseWriteExecutor.execute(recipeDao::deleteAll);
     }
 
     public String getUserEmail() {

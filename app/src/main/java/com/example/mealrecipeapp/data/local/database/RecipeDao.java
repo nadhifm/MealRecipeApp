@@ -24,4 +24,7 @@ public interface RecipeDao {
 
     @Delete
     void delete(RecipeEntity recipeEntity);
+
+    @Query("DELETE FROM recipeentity")
+    void deleteAll();
 }

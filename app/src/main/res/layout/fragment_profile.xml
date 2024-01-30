@@ -1,14 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp"
     tools:context=".ui.profile.ProfileFragment">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/userImageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:shapeAppearance="@style/Circular" />
+
+    <TextView
+        android:id="@+id/userNameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/montserrat_medium"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/userEmailTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/montserrat"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/signOutButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_marginTop="24dp"
         android:text="@string/sign_out" />
-</FrameLayout>
+</LinearLayout>
