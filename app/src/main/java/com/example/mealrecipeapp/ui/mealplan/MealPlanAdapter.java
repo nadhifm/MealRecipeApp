@@ -14,6 +14,7 @@ import java.util.List;
 
 public class MealPlanAdapter extends RecyclerView.Adapter<MealPlanAdapter.MealPlanViewHolder> {
 
+    private final OnClickListener onDeleteClickListener;
     private final OnClickListener onClickListener;
     private List<MealPlan> mealPlans;
 
@@ -22,7 +23,8 @@ public class MealPlanAdapter extends RecyclerView.Adapter<MealPlanAdapter.MealPl
         notifyDataSetChanged();
     }
 
-    public MealPlanAdapter(OnClickListener onClickListener) {
+    public MealPlanAdapter(OnClickListener onClickListener, OnClickListener onDeleteClickListener) {
+        this.onDeleteClickListener = onDeleteClickListener;
         this.onClickListener = onClickListener;
     }
 
@@ -36,7 +38,7 @@ public class MealPlanAdapter extends RecyclerView.Adapter<MealPlanAdapter.MealPl
     @Override
     public void onBindViewHolder(@NonNull MealPlanViewHolder holder, int position) {
         MealPlan mealPlan = mealPlans.get(position);
-        holder.bind(mealPlan, onClickListener);
+        holder.bind(mealPlan, onDeleteClickListener, onClickListener);
     }
 
     @Override
@@ -52,12 +54,13 @@ public class MealPlanAdapter extends RecyclerView.Adapter<MealPlanAdapter.MealPl
             this.binding = binding;
         }
 
-        public void bind(MealPlan mealPlan, OnClickListener onClickListener) {
+        public void bind(MealPlan mealPlan, OnClickListener onDeleteClickListener, OnClickListener onClickListener) {
             binding.titileTextView.setText(mealPlan.getValue().getTitle());
             Glide.with(itemView)
                     .load(mealPlan.getValue().getImage())
                     .into(binding.posterImageView);
-            binding.deleteButton.setOnClickListener(view -> onClickListener.onItemClick(mealPlan));
+            binding.deleteButton.setOnClickListener(view -> onDeleteClickListener.onItemClick(mealPlan));
+            binding.getRoot().setOnClickListener(view -> onClickListener.onItemClick(mealPlan));
         }
     }
 

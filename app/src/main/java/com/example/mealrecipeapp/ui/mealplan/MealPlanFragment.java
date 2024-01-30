@@ -65,13 +65,22 @@ public class MealPlanFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
-        breakfastMealPlanAdapter = new MealPlanAdapter(mealPlan -> mealPlanViewModel.deleteMealPlan(mealPlan.getId()));
+        breakfastMealPlanAdapter = new MealPlanAdapter(
+            mealPlan -> NavHostFragment.findNavController(this).navigate(MealPlanFragmentDirections.actionMealPlanFragmentToRecipeInformationFragment(mealPlan.getValue().getId())),
+            mealPlan -> mealPlanViewModel.deleteMealPlan(mealPlan.getId())
+        );
         binding.breakfastRecyclerView.setAdapter(breakfastMealPlanAdapter);
 
-        lunchMealPlanAdapter = new MealPlanAdapter(mealPlan -> mealPlanViewModel.deleteMealPlan(mealPlan.getId()));
+        lunchMealPlanAdapter = new MealPlanAdapter(
+            mealPlan -> NavHostFragment.findNavController(this).navigate(MealPlanFragmentDirections.actionMealPlanFragmentToRecipeInformationFragment(mealPlan.getValue().getId())),
+            mealPlan -> mealPlanViewModel.deleteMealPlan(mealPlan.getId())
+        );
         binding.lunchRecyclerView.setAdapter(lunchMealPlanAdapter);
 
-        dinnerMealPlanAdapter = new MealPlanAdapter(mealPlan -> mealPlanViewModel.deleteMealPlan(mealPlan.getId()));
+        dinnerMealPlanAdapter = new MealPlanAdapter(
+            mealPlan -> NavHostFragment.findNavController(this).navigate(MealPlanFragmentDirections.actionMealPlanFragmentToRecipeInformationFragment(mealPlan.getValue().getId())),
+            mealPlan -> mealPlanViewModel.deleteMealPlan(mealPlan.getId())
+        );
         binding.dinnerRecyclerView.setAdapter(dinnerMealPlanAdapter);
     }
 
