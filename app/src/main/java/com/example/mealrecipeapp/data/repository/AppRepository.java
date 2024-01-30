@@ -1,7 +1,6 @@
 package com.example.mealrecipeapp.data.repository;
 
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -87,16 +86,34 @@ public class AppRepository {
         return sharedPreferences.getString("image", "");
     }
 
-    public List<Recipe> getRecipes(String query) throws IOException {
+    public LiveData<Resource<List<Recipe>>> getRecipes(String query) {
+        final MutableLiveData<Resource<List<Recipe>>> resource = new MutableLiveData<>();
 
-        Call<GetRecipeResponse> call = apiService.getRecipes(Constants.API_KEY, 25, true, "popularity", query);
+        resource.postValue(Resource.loading(null));
 
-        Response<GetRecipeResponse> response = call.execute();
-        if (response.body() == null) {
-            return new ArrayList<>();
-        } else {
-            return response.body().getRecipes();
-        }
+        Call<GetRecipeResponse> call = apiService.getRecipes(Constants.API_KEY, 25, true, "popularity", query, true, true);
+
+        call.enqueue(new Callback<GetRecipeResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<GetRecipeResponse> call, @NonNull Response<GetRecipeResponse> response) {
+                if (response.code() == 200 && response.body() != null) {
+                    List<Recipe> recipeList = new ArrayList<>(response.body().getRecipes());
+                    recipeList.removeIf(recipe -> recipe.getAnalyzedInstructions().isEmpty());
+                    recipeList.removeIf(recipe -> recipe.getExtendedIngredients().isEmpty());
+
+                    resource.postValue(Resource.success(recipeList));
+                } else {
+                    resource.postValue(Resource.error("Data Empty", null));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<GetRecipeResponse> call, @NonNull Throwable t) {
+                resource.postValue(Resource.error(t.getMessage(), null));
+            }
+        });
+
+        return resource;
     }
 
     public LiveData<String> addMealPlan(Long date, int slot, Recipe recipe) {

@@ -22,7 +22,9 @@ public interface ApiService {
         @Query("number") int number,
         @Query("addRecipeInformation") boolean addRecipeInformation,
         @Query("sort") String sort,
-        @Query("query") String query
+        @Query("query") String query,
+        @Query("instructionsRequired") boolean instructionsRequired,
+        @Query("fillIngredients") boolean fillIngredients
     );
 
     @GET("recipes/{id}/information")
