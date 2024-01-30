@@ -9,6 +9,10 @@
         android:icon="@drawable/ic_calendar"
         android:title="@string/meal_plan" />
     <item
+        android:id="@id/favoriteFragment"
+        android:icon="@drawable/ic_favorite"
+        android:title="@string/favorite" />
+    <item
         android:id="@id/profileFragment"
         android:icon="@drawable/ic_profile"
         android:title="@string/profile" />

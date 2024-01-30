@@ -14,6 +14,8 @@ public class RecipeInformation {
     private final List<Ingredient> extendedIngredients;
     private final List<AnalyzedInstruction> analyzedInstructions;
 
+    private boolean isFavorite = false;
+
     public RecipeInformation(long id, String title, String summary, String image, String imageType, int aggregateLikes, int readyInMinutes, int servings, List<Ingredient> extendedIngredients, List<AnalyzedInstruction> analyzedInstructions) {
         this.id = id;
         this.title = title;
@@ -59,5 +61,13 @@ public class RecipeInformation {
 
     public String getSummary() {
         return summary;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 }

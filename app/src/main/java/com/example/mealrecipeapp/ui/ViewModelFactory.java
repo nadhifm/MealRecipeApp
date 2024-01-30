@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.CreationExtras;
 
 import com.example.mealrecipeapp.data.repository.AppRepository;
 import com.example.mealrecipeapp.ui.addmealplan.AddMealPlanViewModel;
+import com.example.mealrecipeapp.ui.favorite.FavoriteViewModel;
 import com.example.mealrecipeapp.ui.home.HomeViewModel;
 import com.example.mealrecipeapp.ui.mealplan.MealPlanViewModel;
 import com.example.mealrecipeapp.ui.profile.ProfileViewModel;
@@ -39,6 +40,8 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             return (T) new AddMealPlanViewModel(appRepository);
         }  else if (modelClass.isAssignableFrom(RecipeInformationViewModel.class)) {
             return (T) new RecipeInformationViewModel(appRepository);
+        }   else if (modelClass.isAssignableFrom(FavoriteViewModel.class)) {
+            return (T) new FavoriteViewModel(appRepository);
         } else {
             throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
         }

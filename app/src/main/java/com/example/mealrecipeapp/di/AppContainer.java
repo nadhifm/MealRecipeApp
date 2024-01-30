@@ -3,6 +3,9 @@ package com.example.mealrecipeapp.di;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.room.Room;
+
+import com.example.mealrecipeapp.data.local.database.AppDatabase;
 import com.example.mealrecipeapp.data.remote.network.ApiService;
 import com.example.mealrecipeapp.data.repository.AppRepository;
 import com.example.mealrecipeapp.ui.ViewModelFactory;
@@ -32,7 +35,9 @@ public class AppContainer {
                 .build()
                 .create(ApiService.class);
 
-        AppRepository appRepository = new AppRepository(apiService, sharedPreferences);
+        AppDatabase appDatabase = AppDatabase.getDatabase(appContext);
+
+        AppRepository appRepository = new AppRepository(apiService, sharedPreferences, appDatabase.recipeDao());
 
         viewModelFactory = new ViewModelFactory(appRepository);
     }

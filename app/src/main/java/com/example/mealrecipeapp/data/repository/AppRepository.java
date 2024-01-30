@@ -1,11 +1,15 @@
 package com.example.mealrecipeapp.data.repository;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.mealrecipeapp.data.local.database.AppDatabase;
+import com.example.mealrecipeapp.data.local.database.RecipeDao;
+import com.example.mealrecipeapp.data.local.entity.RecipeEntity;
 import com.example.mealrecipeapp.data.remote.network.ApiService;
 import com.example.mealrecipeapp.data.remote.response.GetMealPlanResponse;
 import com.example.mealrecipeapp.data.remote.response.MealPlan;
@@ -32,9 +36,11 @@ import retrofit2.Response;
 public class AppRepository {
     private final ApiService apiService;
     private final SharedPreferences sharedPreferences;
-    public AppRepository(ApiService apiService, SharedPreferences sharedPreferences) {
+    private final RecipeDao recipeDao;
+    public AppRepository(ApiService apiService, SharedPreferences sharedPreferences, RecipeDao recipeDao) {
         this.apiService = apiService;
         this.sharedPreferences = sharedPreferences;
+        this.recipeDao = recipeDao;
     }
 
     public void saveUser(String email, String name, String image) {
@@ -128,7 +134,14 @@ public class AppRepository {
             @Override
             public void onResponse(@NonNull Call<RecipeInformation> call, @NonNull Response<RecipeInformation> response) {
                 if (response.code() == 200 & response.body() != null) {
-                    result.postValue(Resource.success(response.body()));
+                    AppDatabase.databaseWriteExecutor.execute(() -> {
+                        RecipeInformation recipeInformation = response.body();
+                        int favoriteCount = recipeDao.getFavoriteRecipeById(recipeInformation.getID());
+                        if (favoriteCount > 0) {
+                            recipeInformation.setFavorite(true);
+                        }
+                        result.postValue(Resource.success(recipeInformation));
+                    });
                 } else {
                     result.postValue(Resource.error("Fail Get Recipe Information", null));
                 }
@@ -196,5 +209,17 @@ public class AppRepository {
         });
 
         return mealPlan;
+    }
+
+    public void addFavoriteRecipe(RecipeEntity recipeEntity) {
+        AppDatabase.databaseWriteExecutor.execute(() -> recipeDao.insert(recipeEntity));
+    }
+
+    public void removeFavoriteRecipe(RecipeEntity recipeEntity) {
+        AppDatabase.databaseWriteExecutor.execute(() -> recipeDao.delete(recipeEntity));
+    }
+
+    public LiveData<List<RecipeEntity>> getFavoriteRecipes() {
+        return recipeDao.getFavoriteRecipes();
     }
 }

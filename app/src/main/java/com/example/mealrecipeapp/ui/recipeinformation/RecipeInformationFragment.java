@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -21,7 +22,6 @@ import com.example.mealrecipeapp.R;
 import com.example.mealrecipeapp.data.remote.response.RecipeInformation;
 import com.example.mealrecipeapp.databinding.FragmentRecipeInformationBinding;
 import com.example.mealrecipeapp.di.AppContainer;
-import com.example.mealrecipeapp.ui.home.HomeViewModel;
 
 public class RecipeInformationFragment extends Fragment {
 
@@ -83,6 +83,20 @@ public class RecipeInformationFragment extends Fragment {
                     binding.timeTextView.setText(recipeInformation.getReadyInMinutes() + " min");
                     binding.servingTextView.setText(recipeInformation.getServings() + " servings");
                     binding.descriptionTextView.setText(Html.fromHtml(recipeInformation.getSummary(), HtmlCompat.FROM_HTML_MODE_LEGACY));
+
+                    if (recipeInformation.isFavorite()) {
+                        binding.favoriteButton.setIcon(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_favorite_filled));
+                    } else {
+                        binding.favoriteButton.setIcon(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_favorite));
+                    }
+
+                    binding.favoriteButton.setOnClickListener(v -> {
+                        if (recipeInformation.isFavorite()) {
+                            recipeInformationViewModel.removeFavoriteRecipe();
+                        } else {
+                            recipeInformationViewModel.addFavoriteRecipe();
+                        }
+                    });
                     break;
                 case ERROR:
                     binding.progressBar.setVisibility(View.GONE);

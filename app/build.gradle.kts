@@ -70,4 +70,9 @@ dependencies {
 
     // ML Kit
     implementation("com.google.android.gms:play-services-mlkit-image-labeling:16.0.8")
+
+    // Room
+    val roomVersion = "2.6.1"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    annotationProcessor("androidx.room:room-compiler:$roomVersion")
 }
