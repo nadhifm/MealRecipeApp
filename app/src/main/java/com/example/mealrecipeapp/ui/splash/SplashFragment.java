@@ -16,18 +16,20 @@ import android.view.ViewGroup;
 
 import com.example.mealrecipeapp.MealRecipeApp;
 import com.example.mealrecipeapp.R;
+import com.example.mealrecipeapp.databinding.FragmentSplashBinding;
 import com.example.mealrecipeapp.di.AppContainer;
 
 public class SplashFragment extends Fragment {
 
+    private FragmentSplashBinding binding;
     private SplashViewModel splashViewModel;
     private NavController navController;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_splash, container, false);
+        binding = FragmentSplashBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
