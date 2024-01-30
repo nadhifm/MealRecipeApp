@@ -49,6 +49,8 @@ public class SignInFragment extends Fragment {
                 .addCredentialOption(googleIdOption)
                 .build();
 
+        binding.signInButton.setIconTint(null);
+
         binding.signInButton.setOnClickListener(onClick -> credentialManager.getCredentialAsync(
             requireActivity(),
             request,
