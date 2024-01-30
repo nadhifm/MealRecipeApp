@@ -87,7 +87,7 @@ public class MealPlanFragment extends Fragment {
     private void observeDate() {
         mealPlanViewModel.getDate().observe(getViewLifecycleOwner(), date -> {
             final String dateFormat  = "E, dd LLL yyyy";
-            final String selectedDate = new SimpleDateFormat(dateFormat, Locale.US).format(date);
+            final String selectedDate = new SimpleDateFormat(dateFormat, Locale.getDefault()).format(date);
 
             binding.dateTextView.setText(selectedDate);
 
@@ -98,9 +98,9 @@ public class MealPlanFragment extends Fragment {
 
             datePicker.addOnPositiveButtonClickListener(selection -> mealPlanViewModel.setDate(new Date(selection)));
 
-            binding.addBreakfastButton.setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(MealPlanFragmentDirections.actionMealPlanFragmentToAddMealPlanFragment(1, date.getTime()/1000)));
-            binding.addLunchButton.setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(MealPlanFragmentDirections.actionMealPlanFragmentToAddMealPlanFragment(2, date.getTime()/1000)));
-            binding.addDinnerButton.setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(MealPlanFragmentDirections.actionMealPlanFragmentToAddMealPlanFragment(3, date.getTime()/1000)));
+            binding.addBreakfastButton.setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(MealPlanFragmentDirections.actionMealPlanFragmentToAddMealPlanFragment(1, date.getTime())));
+            binding.addLunchButton.setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(MealPlanFragmentDirections.actionMealPlanFragmentToAddMealPlanFragment(2, date.getTime())));
+            binding.addDinnerButton.setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(MealPlanFragmentDirections.actionMealPlanFragmentToAddMealPlanFragment(3, date.getTime())));
         });
     }
 

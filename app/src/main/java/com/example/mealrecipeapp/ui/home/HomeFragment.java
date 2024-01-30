@@ -150,7 +150,7 @@ public class HomeFragment extends Fragment {
 
     private Uri getImageUri(Context context) {
         final String fileNameFormat  = "yyyyMMdd_HHmmss";
-        final String timestamp = new SimpleDateFormat(fileNameFormat, Locale.US).format(new Date());
+        final String timestamp = new SimpleDateFormat(fileNameFormat, Locale.getDefault()).format(new Date());
         Uri uri = null;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

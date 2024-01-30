@@ -123,7 +123,7 @@ public class AppRepository {
         String hash = sharedPreferences.getString("hash", "");
 
         MealPlanValue valueBody = new MealPlanValue(recipe.getID(), recipe.getServings(), recipe.getTitle(), recipe.getImage(), recipe.getImageType());
-        MealPlan body = new MealPlan(0L, date, slot, 0, "RECIPE", valueBody);
+        MealPlan body = new MealPlan(0L, (date/1000)+25200, slot, 0, "RECIPE", valueBody);
 
         Call<AddMealPlanResponse> call = apiService.addMealPlan(username, hash, Constants.API_KEY, body);
 
@@ -207,7 +207,7 @@ public class AppRepository {
         String hash = sharedPreferences.getString("hash", "");
 
         final String dateFormat  = "yyyy-MM-dd";
-        final String formattedDate = new SimpleDateFormat(dateFormat, Locale.US).format(date);
+        final String formattedDate = new SimpleDateFormat(dateFormat, Locale.getDefault()).format(date);
 
         Call<GetMealPlanResponse> call = apiService.getMealPlans(username, formattedDate, hash, Constants.API_KEY);
 
