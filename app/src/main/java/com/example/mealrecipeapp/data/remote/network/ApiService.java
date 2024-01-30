@@ -5,6 +5,7 @@ import com.example.mealrecipeapp.data.remote.response.MealPlan;
 import com.example.mealrecipeapp.data.remote.response.AddMealPlanResponse;
 import com.example.mealrecipeapp.data.remote.response.ConnectUserResponse;
 import com.example.mealrecipeapp.data.remote.response.GetRecipeResponse;
+import com.example.mealrecipeapp.data.remote.response.RecipeInformation;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -20,9 +21,14 @@ public interface ApiService {
         @Query("apiKey") String apiKey,
         @Query("number") int number,
         @Query("addRecipeInformation") boolean addRecipeInformation,
-        @Query("fillIngredients") boolean fillIngredients,
         @Query("sort") String sort,
         @Query("query") String query
+    );
+
+    @GET("recipes/{id}/information")
+    Call<RecipeInformation> getRecipeInformation(
+        @Path("id") Long id,
+        @Query("apiKey") String apiKey
     );
 
     @POST("users/connect")

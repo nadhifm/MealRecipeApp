@@ -22,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
 import com.example.mealrecipeapp.MealRecipeApp;
@@ -91,7 +92,9 @@ public class HomeFragment extends Fragment {
                 .setPositiveButton("Camera", (dialog, i) -> startCamera())
                 .setNegativeButton("Gallery", (dialog, i) -> startGallery()).show());
 
-        recipeAdapter = new RecipeAdapter();
+        recipeAdapter = new RecipeAdapter(recipe -> {
+            NavHostFragment.findNavController(this).navigate(HomeFragmentDirections.actionHomeFragmentToRecipeInformationFragment(recipe.getID()));
+        });
         binding.recipeRecyclerView.setAdapter(recipeAdapter);
 
         binding.searchEditText.addTextChangedListener(new TextWatcher() {

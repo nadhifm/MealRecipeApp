@@ -14,6 +14,8 @@ import com.example.mealrecipeapp.data.remote.response.MealPlanValue;
 import com.example.mealrecipeapp.data.remote.response.ConnectUserResponse;
 import com.example.mealrecipeapp.data.remote.response.GetRecipeResponse;
 import com.example.mealrecipeapp.data.remote.response.Recipe;
+import com.example.mealrecipeapp.data.remote.response.RecipeInformation;
+import com.example.mealrecipeapp.utils.Constants;
 import com.example.mealrecipeapp.utils.Resource;
 
 import java.io.IOException;
@@ -36,11 +38,11 @@ public class AppRepository {
     }
 
     public void saveUser(String email, String name, String image) {
-        Call<ConnectUserResponse> call = apiService.connectUser("f69404291ca9448ab677f16be1fbb544");
+        Call<ConnectUserResponse> call = apiService.connectUser(Constants.API_KEY);
 
         call.enqueue(new Callback<ConnectUserResponse>() {
             @Override
-            public void onResponse(@NonNull Call<ConnectUserResponse> call, Response<ConnectUserResponse> response) {
+            public void onResponse(@NonNull Call<ConnectUserResponse> call, @NonNull Response<ConnectUserResponse> response) {
                 if (response.body() != null && response.isSuccessful()) {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("email", email);
@@ -79,7 +81,7 @@ public class AppRepository {
 
     public List<Recipe> getRecipes(String query) throws IOException {
 
-        Call<GetRecipeResponse> call = apiService.getRecipes("f69404291ca9448ab677f16be1fbb544", 25, true, true, "popularity", query);
+        Call<GetRecipeResponse> call = apiService.getRecipes(Constants.API_KEY, 25, true, "popularity", query);
 
         Response<GetRecipeResponse> response = call.execute();
         if (response.body() == null) {
@@ -98,7 +100,7 @@ public class AppRepository {
         MealPlanValue valueBody = new MealPlanValue(recipe.getID(), recipe.getServings(), recipe.getTitle(), recipe.getImage(), recipe.getImageType());
         MealPlan body = new MealPlan(0L, date, slot, 0, "RECIPE", valueBody);
 
-        Call<AddMealPlanResponse> call = apiService.addMealPlan(username, hash, "f69404291ca9448ab677f16be1fbb544", body);
+        Call<AddMealPlanResponse> call = apiService.addMealPlan(username, hash, Constants.API_KEY, body);
 
         call.enqueue(new Callback<AddMealPlanResponse>() {
             @Override
@@ -115,13 +117,39 @@ public class AppRepository {
         return result;
     }
 
+    public LiveData<Resource<RecipeInformation>> getRecipeInformation(Long id) {
+        final MutableLiveData<Resource<RecipeInformation>> result = new MutableLiveData<>();
+
+        result.postValue(Resource.loading(null));
+
+        Call<RecipeInformation> call = apiService.getRecipeInformation(id, Constants.API_KEY);
+
+        call.enqueue(new Callback<RecipeInformation>() {
+            @Override
+            public void onResponse(@NonNull Call<RecipeInformation> call, @NonNull Response<RecipeInformation> response) {
+                if (response.code() == 200 & response.body() != null) {
+                    result.postValue(Resource.success(response.body()));
+                } else {
+                    result.postValue(Resource.error("Fail Get Recipe Information", null));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<RecipeInformation> call, @NonNull Throwable t) {
+                result.postValue(Resource.error(t.getMessage(), null));
+            }
+        });
+
+        return result;
+    }
+
     public LiveData<String> deleteMealPlan(Long id) {
         final MutableLiveData<String> result = new MutableLiveData<>();
 
         String username = sharedPreferences.getString("username", "");
         String hash = sharedPreferences.getString("hash", "");
 
-        Call<AddMealPlanResponse> call = apiService.deleteMealPlan(username, id, hash, "f69404291ca9448ab677f16be1fbb544");
+        Call<AddMealPlanResponse> call = apiService.deleteMealPlan(username, id, hash, Constants.API_KEY);
 
         call.enqueue(new Callback<AddMealPlanResponse>() {
             @Override
@@ -149,11 +177,11 @@ public class AppRepository {
         final String dateFormat  = "yyyy-MM-dd";
         final String formattedDate = new SimpleDateFormat(dateFormat, Locale.US).format(date);
 
-        Call<GetMealPlanResponse> call = apiService.getMealPlans(username, formattedDate, hash, "f69404291ca9448ab677f16be1fbb544");
+        Call<GetMealPlanResponse> call = apiService.getMealPlans(username, formattedDate, hash, Constants.API_KEY);
 
         call.enqueue(new Callback<GetMealPlanResponse>() {
             @Override
-            public void onResponse(Call<GetMealPlanResponse> call, Response<GetMealPlanResponse> response) {
+            public void onResponse(@NonNull Call<GetMealPlanResponse> call, @NonNull Response<GetMealPlanResponse> response) {
                 if (response.code() == 200 && response.body() != null) {
                     mealPlan.postValue(Resource.success(response.body().getItems()));
                 } else {
@@ -162,7 +190,7 @@ public class AppRepository {
             }
 
             @Override
-            public void onFailure(Call<GetMealPlanResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<GetMealPlanResponse> call, @NonNull Throwable t) {
                 mealPlan.postValue(Resource.error(t.getMessage(), null));
             }
         });

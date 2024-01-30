@@ -13,7 +13,13 @@ import com.example.mealrecipeapp.databinding.RecipeItemBinding;
 import java.util.List;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
+
+    private final OnClickListener onClickListener;
     private List<Recipe> recipes;
+
+    public RecipeAdapter(OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
+    }
 
     public void setRecipes(List<Recipe> recipes) {
         this.recipes = recipes;
@@ -30,7 +36,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     @Override
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
         Recipe recipe = recipes.get(position);
-        holder.bind(recipe);
+        holder.bind(recipe, onClickListener);
     }
 
     @Override
@@ -46,7 +52,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             this.binding = binding;
         }
 
-        public void bind(Recipe recipe) {
+        public void bind(Recipe recipe, OnClickListener onClickListener) {
             binding.titileTextView.setText(recipe.getTitle());
             binding.voteTextView.setText(recipe.getAggregateLikes() + " likes");
             binding.timeTextView.setText(recipe.getReadyInMinutes() + " min");
@@ -54,6 +60,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             Glide.with(itemView)
                     .load(recipe.getImage())
                     .into(binding.posterImageView);
+
+            binding.getRoot().setOnClickListener(v -> onClickListener.onItemClick(recipe));
         }
+    }
+    // Interface for handling item clicks
+    public interface OnClickListener {
+        void onItemClick(Recipe recipe);
     }
 }

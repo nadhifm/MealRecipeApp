@@ -20,7 +20,11 @@
         android:id="@+id/homeFragment"
         android:name="com.example.mealrecipeapp.ui.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_recipeInformationFragment"
+            app:destination="@id/recipeInformationFragment" />
+    </fragment>
     <fragment
         android:id="@+id/splashFragment"
         android:name="com.example.mealrecipeapp.ui.splash.SplashFragment"
@@ -56,6 +60,9 @@
         <action
             android:id="@+id/action_mealPlanFragment_to_addMealPlanFragment"
             app:destination="@id/addMealPlanFragment" />
+        <action
+            android:id="@+id/action_mealPlanFragment_to_recipeInformationFragment"
+            app:destination="@id/recipeInformationFragment" />
     </fragment>
     <fragment
         android:id="@+id/addMealPlanFragment"
@@ -67,6 +74,15 @@
             app:argType="integer" />
         <argument
             android:name="date"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/recipeInformationFragment"
+        android:name="com.example.mealrecipeapp.ui.recipeinformation.RecipeInformationFragment"
+        android:label="fragment_recipe_information"
+        tools:layout="@layout/fragment_recipe_information" >
+        <argument
+            android:name="id"
             app:argType="long" />
     </fragment>
 </navigation>

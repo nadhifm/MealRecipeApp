@@ -10,6 +10,7 @@ import com.example.mealrecipeapp.ui.addmealplan.AddMealPlanViewModel;
 import com.example.mealrecipeapp.ui.home.HomeViewModel;
 import com.example.mealrecipeapp.ui.mealplan.MealPlanViewModel;
 import com.example.mealrecipeapp.ui.profile.ProfileViewModel;
+import com.example.mealrecipeapp.ui.recipeinformation.RecipeInformationViewModel;
 import com.example.mealrecipeapp.ui.signin.SignInViewModel;
 import com.example.mealrecipeapp.ui.splash.SplashViewModel;
 
@@ -36,6 +37,8 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             return (T) new MealPlanViewModel(appRepository);
         } else if (modelClass.isAssignableFrom(AddMealPlanViewModel.class)) {
             return (T) new AddMealPlanViewModel(appRepository);
+        }  else if (modelClass.isAssignableFrom(RecipeInformationViewModel.class)) {
+            return (T) new RecipeInformationViewModel(appRepository);
         } else {
             throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
         }

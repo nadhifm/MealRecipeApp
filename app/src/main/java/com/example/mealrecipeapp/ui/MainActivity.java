@@ -29,10 +29,10 @@ public class MainActivity extends AppCompatActivity {
 
         navController.addOnDestinationChangedListener((controller, navDestination, bundle) -> {
             int navId = navDestination.getId();
-            if (navId== R.id.signInFragment || navId == R.id.splashFragment || navId == R.id.addMealPlanFragment) {
-                binding.bottomNavigation.setVisibility(View.GONE);
-            } else {
+            if (navId== R.id.homeFragment || navId == R.id.mealPlanFragment || navId == R.id.profileFragment) {
                 binding.bottomNavigation.setVisibility(View.VISIBLE);
+            } else {
+                binding.bottomNavigation.setVisibility(View.GONE);
             }
         });
     }

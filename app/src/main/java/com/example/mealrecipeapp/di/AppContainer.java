@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import com.example.mealrecipeapp.data.remote.network.ApiService;
 import com.example.mealrecipeapp.data.repository.AppRepository;
 import com.example.mealrecipeapp.ui.ViewModelFactory;
+import com.example.mealrecipeapp.utils.Constants;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -25,7 +26,7 @@ public class AppContainer {
                 .build();
 
         ApiService apiService = new Retrofit.Builder()
-                .baseUrl("https://api.spoonacular.com/")
+                .baseUrl(Constants.API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build()
