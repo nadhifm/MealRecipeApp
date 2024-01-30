@@ -3,6 +3,7 @@ plugins {
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("androidx.navigation.safeargs")
+    id("com.google.firebase.appdistribution")
 }
 
 android {
@@ -20,6 +21,13 @@ android {
     }
 
     buildTypes {
+        debug {
+            firebaseAppDistribution {
+                artifactType = "APK"
+                releaseNotes = "App distribution from gradle file"
+                testers = "awandi8991@gmail.com"
+            }
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
