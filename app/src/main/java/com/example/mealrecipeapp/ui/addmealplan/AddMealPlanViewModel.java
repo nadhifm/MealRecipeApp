@@ -18,6 +18,7 @@ import java.util.concurrent.Future;
 public class AddMealPlanViewModel extends ViewModel {
     private final AppRepository appRepository;
     private final MutableLiveData<Resource<List<Recipe>>> recipes = new MutableLiveData<>();
+    private final MutableLiveData<String> addMealPlanResult = new MutableLiveData<>();
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private Future<?> currentJob;
 
@@ -43,15 +44,16 @@ public class AddMealPlanViewModel extends ViewModel {
         });
     }
 
+    public LiveData<String> getAddMealPlanResult() {
+        return addMealPlanResult;
+    }
+
     public LiveData<Resource<List<Recipe>>> getRecipesLiveData() {
         return recipes;
     }
 
     public void addMealPlan(Long date, int slot, Recipe recipe) {
-        try {
-            appRepository.addMealPlan(date, slot, recipe);
-        } catch (IOException e) {
-        }
+        appRepository.addMealPlan(date, slot, recipe).observeForever(addMealPlanResult::postValue);
     }
 
     @Override

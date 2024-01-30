@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         navController.addOnDestinationChangedListener((controller, navDestination, bundle) -> {
             int navId = navDestination.getId();
-            if (navId== R.id.signInFragment || navId == R.id.splashFragment) {
+            if (navId== R.id.signInFragment || navId == R.id.splashFragment || navId == R.id.addMealPlanFragment) {
                 binding.bottomNavigation.setVisibility(View.GONE);
             } else {
                 binding.bottomNavigation.setVisibility(View.VISIBLE);

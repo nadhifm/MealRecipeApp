@@ -41,6 +41,12 @@ public class MealPlanFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        mealPlanViewModel.getMealPlans(null);
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         AppContainer appContainer = ((MealRecipeApp) requireActivity().getApplication()).appContainer;
@@ -54,6 +60,7 @@ public class MealPlanFragment extends Fragment {
 
         setupRecyclerView();
         observeDate();
+        observeDeleteMelaPlanResult();
         observeMealPlans();
     }
 
@@ -63,7 +70,7 @@ public class MealPlanFragment extends Fragment {
 
         lunchMealPlanAdapter = new MealPlanAdapter(mealPlan -> mealPlanViewModel.deleteMealPlan(mealPlan.getId()));
         binding.lunchRecyclerView.setAdapter(lunchMealPlanAdapter);
-//
+
         dinnerMealPlanAdapter = new MealPlanAdapter(mealPlan -> mealPlanViewModel.deleteMealPlan(mealPlan.getId()));
         binding.dinnerRecyclerView.setAdapter(dinnerMealPlanAdapter);
     }
@@ -88,14 +95,21 @@ public class MealPlanFragment extends Fragment {
         });
     }
 
+    private void observeDeleteMelaPlanResult() {
+        mealPlanViewModel.getDeleteMealPlanResultLiveData().observe(getViewLifecycleOwner(), message -> {
+            if (message.contains("Success")) {
+                mealPlanViewModel.getMealPlans(null);
+            }
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+        });
+    }
+
     private void observeMealPlans() {
-        mealPlanViewModel.getMealPlans().observe(getViewLifecycleOwner(), resource -> {
+        mealPlanViewModel.getMealPlansLiveData().observe(getViewLifecycleOwner(), resource -> {
             switch (resource.getStatus()) {
                 case SUCCESS:
                     binding.progressBar.setVisibility(View.GONE);
-                    binding.breakfastRecyclerView.setVisibility(View.VISIBLE);
-                    binding.lunchRecyclerView.setVisibility(View.VISIBLE);
-                    binding.dinnerRecyclerView.setVisibility(View.VISIBLE);
+                    binding.mealplanGroup.setVisibility(View.VISIBLE);
 
                     List<MealPlan> breakfastMealPlan = new ArrayList<>(resource.getData());
                     breakfastMealPlan.removeIf(item -> item.getSlot() != 1);
@@ -110,16 +124,15 @@ public class MealPlanFragment extends Fragment {
                     dinnerMealPlanAdapter.setMealPlans(dinnerMealPlan);
                     break;
                 case ERROR:
+                    breakfastMealPlanAdapter.setMealPlans(new ArrayList<>());
+                    lunchMealPlanAdapter.setMealPlans(new ArrayList<>());
+                    dinnerMealPlanAdapter.setMealPlans(new ArrayList<>());
                     binding.progressBar.setVisibility(View.GONE);
-                    binding.breakfastRecyclerView.setVisibility(View.GONE);
-                    binding.lunchRecyclerView.setVisibility(View.GONE);
-                    binding.dinnerRecyclerView.setVisibility(View.GONE);
+                    binding.mealplanGroup.setVisibility(View.VISIBLE);
                     Toast.makeText(getActivity(), resource.getMessage(), Toast.LENGTH_SHORT).show();
                     break;
                 case LOADING:
-                    binding.breakfastRecyclerView.setVisibility(View.GONE);
-                    binding.lunchRecyclerView.setVisibility(View.GONE);
-                    binding.dinnerRecyclerView.setVisibility(View.GONE);
+                    binding.mealplanGroup.setVisibility(View.GONE);
                     binding.progressBar.setVisibility(View.VISIBLE);
                     break;
             }

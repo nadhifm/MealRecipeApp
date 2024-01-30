@@ -89,7 +89,8 @@ public class AppRepository {
         }
     }
 
-    public void addMealPlan(Long date, int slot, Recipe recipe) throws IOException {
+    public LiveData<String> addMealPlan(Long date, int slot, Recipe recipe) {
+        final MutableLiveData<String> result = new MutableLiveData<>();
 
         String username = sharedPreferences.getString("username", "");
         String hash = sharedPreferences.getString("hash", "");
@@ -101,19 +102,21 @@ public class AppRepository {
 
         call.enqueue(new Callback<AddMealPlanResponse>() {
             @Override
-            public void onResponse(Call<AddMealPlanResponse> call, Response<AddMealPlanResponse> response) {
-
+            public void onResponse(@NonNull Call<AddMealPlanResponse> call, @NonNull Response<AddMealPlanResponse> response) {
+                result.postValue("Success Add Meal Plan");
             }
 
             @Override
-            public void onFailure(Call<AddMealPlanResponse> call, Throwable t) {
-
+            public void onFailure(@NonNull Call<AddMealPlanResponse> call, @NonNull Throwable t) {
+                result.postValue("Fail Add Meal Plan");
             }
         });
 
+        return result;
     }
 
-    public void deleteMealPlan(Long id) {
+    public LiveData<String> deleteMealPlan(Long id) {
+        final MutableLiveData<String> result = new MutableLiveData<>();
 
         String username = sharedPreferences.getString("username", "");
         String hash = sharedPreferences.getString("hash", "");
@@ -122,16 +125,17 @@ public class AppRepository {
 
         call.enqueue(new Callback<AddMealPlanResponse>() {
             @Override
-            public void onResponse(Call<AddMealPlanResponse> call, Response<AddMealPlanResponse> response) {
-
+            public void onResponse(@NonNull Call<AddMealPlanResponse> call, @NonNull Response<AddMealPlanResponse> response) {
+                result.postValue("Success Delete Meal Plan");
             }
 
             @Override
-            public void onFailure(Call<AddMealPlanResponse> call, Throwable t) {
-
+            public void onFailure(@NonNull Call<AddMealPlanResponse> call, @NonNull Throwable t) {
+                result.postValue("Fail Delete Meal Plan");
             }
         });
 
+        return result;
     }
 
     public LiveData<Resource<List<MealPlan>>> getMealPlans(Date date) {
@@ -150,8 +154,10 @@ public class AppRepository {
         call.enqueue(new Callback<GetMealPlanResponse>() {
             @Override
             public void onResponse(Call<GetMealPlanResponse> call, Response<GetMealPlanResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
+                if (response.code() == 200 && response.body() != null) {
                     mealPlan.postValue(Resource.success(response.body().getItems()));
+                } else {
+                    mealPlan.postValue(Resource.error("No meals planned for that day", null));
                 }
             }
 

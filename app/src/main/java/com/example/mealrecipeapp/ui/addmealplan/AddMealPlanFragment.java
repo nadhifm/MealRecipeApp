@@ -60,6 +60,30 @@ public class AddMealPlanFragment extends Fragment {
         AppContainer appContainer = ((MealRecipeApp) requireActivity().getApplication()).appContainer;
         addMealPlanViewModel = new ViewModelProvider(this, appContainer.viewModelFactory).get(AddMealPlanViewModel.class);
 
+        binding.addImageButton.setOnClickListener(onClick -> new MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Search Recipe By Image")
+                .setMessage("Choose Your Media ?")
+                .setNeutralButton("Cancel", (dialog, i) -> dialog.dismiss())
+                .setPositiveButton("Camera", (dialog, i) -> startCamera())
+                .setNegativeButton("Gallery", (dialog, i) -> startGallery()).show());
+
+        setupIntent();
+        setupRecyclerView();
+        handleEditText();
+        observeAddMealPlanResult();
+        observeRecipes();
+    }
+
+    private void setupRecyclerView() {
+        addMealPlanAdapter = new AddMealPlanAdapter(recipe -> {
+            int slot = AddMealPlanFragmentArgs.fromBundle(getArguments()).getSlot();
+            Long date = AddMealPlanFragmentArgs.fromBundle(getArguments()).getDate();
+            addMealPlanViewModel.addMealPlan(date, slot, recipe);
+        });
+        binding.recipeRecyclerView.setAdapter(addMealPlanAdapter);
+    }
+
+    private void setupIntent() {
         launcherGallery = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
             if (uri != null) {
                 currentUri = uri;
@@ -78,21 +102,9 @@ public class AddMealPlanFragment extends Fragment {
                 }
             }
         });
+    }
 
-        binding.addImageButton.setOnClickListener(onClick -> new MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Search Recipe By Image")
-                .setMessage("Choose Your Media ?")
-                .setNeutralButton("Cancel", (dialog, i) -> dialog.dismiss())
-                .setPositiveButton("Camera", (dialog, i) -> startCamera())
-                .setNegativeButton("Gallery", (dialog, i) -> startGallery()).show());
-
-        addMealPlanAdapter = new AddMealPlanAdapter(recipe -> {
-            int slot = AddMealPlanFragmentArgs.fromBundle(getArguments()).getSlot();
-            Long date = AddMealPlanFragmentArgs.fromBundle(getArguments()).getDate();
-            addMealPlanViewModel.addMealPlan(date, slot, recipe);
-        });
-        binding.recipeRecyclerView.setAdapter(addMealPlanAdapter);
-
+    private void handleEditText() {
         binding.searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -109,7 +121,15 @@ public class AddMealPlanFragment extends Fragment {
 
             }
         });
+    }
 
+    private void observeAddMealPlanResult() {
+        addMealPlanViewModel.getAddMealPlanResult().observe(getViewLifecycleOwner(), message -> {
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void observeRecipes() {
         addMealPlanViewModel.getRecipesLiveData().observe(getViewLifecycleOwner(), resource -> {
             switch (resource.getStatus()) {
                 case SUCCESS:

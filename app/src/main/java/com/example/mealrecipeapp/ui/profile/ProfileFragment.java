@@ -35,7 +35,7 @@ public class ProfileFragment extends Fragment {
         AppContainer appContainer = ((MealRecipeApp) requireActivity().getApplication()).appContainer;
         profileViewModel = new ViewModelProvider(this, appContainer.viewModelFactory).get(ProfileViewModel.class);
 
-        binding.buttonSignOut.setOnClickListener(onClick -> {
+        binding.signOutButton.setOnClickListener(onClick -> {
             profileViewModel.signOut();
             NavHostFragment.findNavController(this).navigate(ProfileFragmentDirections.actionProfileFragmentToSignInFragment());
         });
