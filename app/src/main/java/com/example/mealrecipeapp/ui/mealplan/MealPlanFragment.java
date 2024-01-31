@@ -1,6 +1,7 @@
 package com.example.mealrecipeapp.ui.mealplan;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +62,7 @@ public class MealPlanFragment extends Fragment {
         setupRecyclerView();
         observeDate();
         observeDeleteMelaPlanResult();
+        observeMessageError();
         observeMealPlans();
     }
 
@@ -104,12 +106,23 @@ public class MealPlanFragment extends Fragment {
         });
     }
 
+    private void observeMessageError() {
+        mealPlanViewModel.getMessageErrorLiveData().observe(getViewLifecycleOwner(), message -> {
+            if (!message.equals("")) {
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+                mealPlanViewModel.resetMessageError();
+            }
+        });
+    }
+
     private void observeDeleteMelaPlanResult() {
         mealPlanViewModel.getDeleteMealPlanResultLiveData().observe(getViewLifecycleOwner(), message -> {
             if (message.contains("Success")) {
                 mealPlanViewModel.getMealPlans(null);
             }
-            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+            if (!message.equals("")) {
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -138,7 +151,6 @@ public class MealPlanFragment extends Fragment {
                     dinnerMealPlanAdapter.setMealPlans(new ArrayList<>());
                     binding.progressBar.setVisibility(View.GONE);
                     binding.mealplanGroup.setVisibility(View.VISIBLE);
-                    Toast.makeText(getActivity(), resource.getMessage(), Toast.LENGTH_SHORT).show();
                     break;
                 case LOADING:
                     binding.mealplanGroup.setVisibility(View.GONE);
