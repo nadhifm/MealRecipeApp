@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +20,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.mealrecipeapp.MealRecipeApp;
 import com.example.mealrecipeapp.databinding.FragmentSignInBinding;
 import com.example.mealrecipeapp.di.AppContainer;
+import com.example.mealrecipeapp.ui.dialog.LoadinDialog;
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption;
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
 
@@ -71,7 +73,6 @@ public class SignInFragment extends Fragment {
                     }
 
                     signInViewModel.saveUser(email, name, image);
-                    navigate();
                 }
 
                 @Override
@@ -80,9 +81,26 @@ public class SignInFragment extends Fragment {
                 }
             }
         ));
+
+        observeSignInResult();
     }
 
-    public void navigate() {
-        NavHostFragment.findNavController(this).navigate(SignInFragmentDirections.actionSignInFragmentToHomeFragment());
+    private void observeSignInResult() {
+        LoadinDialog loadinDialog = new LoadinDialog(requireContext());
+        signInViewModel.getSignInResult().observe(getViewLifecycleOwner(), resource -> {
+            switch (resource.getStatus()) {
+                case SUCCESS:
+                    loadinDialog.dismiss();
+                    NavHostFragment.findNavController(this).navigate(SignInFragmentDirections.actionSignInFragmentToHomeFragment());
+                    break;
+                case ERROR:
+                    loadinDialog.dismiss();
+                    Toast.makeText(getActivity(), resource.getMessage(), Toast.LENGTH_SHORT).show();
+                    break;
+                case LOADING:
+                    loadinDialog.show();
+                    break;
+            }
+        });
     }
 }

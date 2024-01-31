@@ -10,23 +10,27 @@ import com.example.mealrecipeapp.data.local.database.AppDatabase;
 import com.example.mealrecipeapp.data.local.database.RecipeDao;
 import com.example.mealrecipeapp.data.local.entity.RecipeEntity;
 import com.example.mealrecipeapp.data.remote.network.ApiService;
-import com.example.mealrecipeapp.data.remote.response.GetMealPlanResponse;
-import com.example.mealrecipeapp.data.remote.response.MealPlan;
 import com.example.mealrecipeapp.data.remote.response.AddMealPlanResponse;
-import com.example.mealrecipeapp.data.remote.response.MealPlanValue;
 import com.example.mealrecipeapp.data.remote.response.ConnectUserResponse;
+import com.example.mealrecipeapp.data.remote.response.GetMealPlanResponse;
 import com.example.mealrecipeapp.data.remote.response.GetRecipeResponse;
+import com.example.mealrecipeapp.data.remote.response.MealPlan;
+import com.example.mealrecipeapp.data.remote.response.MealPlanValue;
 import com.example.mealrecipeapp.data.remote.response.Recipe;
 import com.example.mealrecipeapp.data.remote.response.RecipeInformation;
 import com.example.mealrecipeapp.utils.Constants;
 import com.example.mealrecipeapp.utils.Resource;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,34 +40,76 @@ public class AppRepository {
     private final ApiService apiService;
     private final SharedPreferences sharedPreferences;
     private final RecipeDao recipeDao;
+    private final FirebaseFirestore firestoreDB = FirebaseFirestore.getInstance();
     public AppRepository(ApiService apiService, SharedPreferences sharedPreferences, RecipeDao recipeDao) {
         this.apiService = apiService;
         this.sharedPreferences = sharedPreferences;
         this.recipeDao = recipeDao;
     }
 
-    public void saveUser(String email, String name, String image) {
-        Call<ConnectUserResponse> call = apiService.connectUser(Constants.API_KEY);
+    public LiveData<Resource<String>> saveUser(String email, String name, String image) {
+        final MutableLiveData<Resource<String>> resource = new MutableLiveData<>();
+        resource.postValue(Resource.loading(null));
 
-        call.enqueue(new Callback<ConnectUserResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<ConnectUserResponse> call, @NonNull Response<ConnectUserResponse> response) {
-                if (response.body() != null && response.isSuccessful()) {
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        DocumentReference docRef = firestoreDB.collection("users").document(email);
+        // check data in firestore
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    // data exist in firestore
+                    // save data user to shared preferences
                     editor.putString("email", email);
                     editor.putString("name", name);
                     editor.putString("image", image);
-                    editor.putString("username", response.body().getUsername());
-                    editor.putString("hash", response.body().getHash());
+                    editor.putString("username", document.getString("username"));
+                    editor.putString("hash", document.getString("hash"));
                     editor.apply();
+                    resource.postValue(Resource.success("Success Sign In"));
+                } else {
+                    // data not exist in firestore
+                    // create data user from api
+                    Call<ConnectUserResponse> call = apiService.connectUser(Constants.API_KEY);
+                    call.enqueue(new Callback<ConnectUserResponse>() {
+                        @Override
+                        public void onResponse(@NonNull Call<ConnectUserResponse> call, @NonNull Response<ConnectUserResponse> response) {
+                            if (response.body() != null && response.isSuccessful()) {
+                                // success create data user from api
+                                // save data user to firestore
+                                Map<String, Object> user = new HashMap<>();
+                                user.put("username", response.body().getUsername());
+                                user.put("hash", response.body().getHash());
+
+                                docRef.set(user)
+                                    .addOnSuccessListener(aVoid -> {
+                                        // success save data user to firestore
+                                        // save data user to shared preferences
+                                        editor.putString("email", email);
+                                        editor.putString("name", name);
+                                        editor.putString("image", image);
+                                        editor.putString("username", response.body().getUsername());
+                                        editor.putString("hash", response.body().getHash());
+                                        editor.apply();
+                                        resource.postValue(Resource.success("Success Sign In"));
+                                    })
+                                    .addOnFailureListener(e ->  resource.postValue(Resource.error("Fail Sign In", null)));
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<ConnectUserResponse> call, @NonNull Throwable t) {
+                            resource.postValue(Resource.error("Fail Sign In", null));
+                        }
+                    });
                 }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ConnectUserResponse> call, @NonNull Throwable t) {
-
+            } else {
+                resource.postValue(Resource.error("Fail Sign In", null));
             }
         });
+
+        return resource;
     }
 
     public void deleteUser() {
