@@ -22,10 +22,13 @@ import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.mealrecipeapp.MealRecipeApp;
 import com.example.mealrecipeapp.databinding.FragmentAddMealPlanBinding;
 import com.example.mealrecipeapp.di.AppContainer;
+import com.example.mealrecipeapp.ui.dialog.LoadinDialog;
+import com.example.mealrecipeapp.ui.signin.SignInFragmentDirections;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.label.ImageLabeler;
@@ -124,8 +127,21 @@ public class AddMealPlanFragment extends Fragment {
     }
 
     private void observeAddMealPlanResult() {
-        addMealPlanViewModel.getAddMealPlanResult().observe(getViewLifecycleOwner(), message -> {
-            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+        LoadinDialog loadinDialog = new LoadinDialog(requireContext());
+        addMealPlanViewModel.getAddMealPlanResult().observe(getViewLifecycleOwner(), resource -> {
+            switch (resource.getStatus()) {
+                case SUCCESS:
+                    loadinDialog.dismiss();
+                    Toast.makeText(getActivity(), resource.getData(), Toast.LENGTH_SHORT).show();
+                    break;
+                case ERROR:
+                    loadinDialog.dismiss();
+                    Toast.makeText(getActivity(), resource.getMessage(), Toast.LENGTH_SHORT).show();
+                    break;
+                case LOADING:
+                    loadinDialog.show();
+                    break;
+            }
         });
     }
 

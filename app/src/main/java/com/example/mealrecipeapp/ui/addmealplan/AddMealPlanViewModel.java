@@ -17,7 +17,7 @@ import java.util.concurrent.Future;
 public class AddMealPlanViewModel extends ViewModel {
     private final AppRepository appRepository;
     private final MutableLiveData<Resource<List<Recipe>>> recipes = new MutableLiveData<>();
-    private final MutableLiveData<String> addMealPlanResult = new MutableLiveData<>();
+    private final MutableLiveData<Resource<String>> addMealPlanResult = new MutableLiveData<>();
 
     public AddMealPlanViewModel(AppRepository appRepository) {
         this.appRepository = appRepository;
@@ -27,7 +27,7 @@ public class AddMealPlanViewModel extends ViewModel {
         appRepository.getRecipes(query).observeForever(recipes::postValue);
     }
 
-    public LiveData<String> getAddMealPlanResult() {
+    public LiveData<Resource<String>> getAddMealPlanResult() {
         return addMealPlanResult;
     }
 

@@ -162,8 +162,9 @@ public class AppRepository {
         return resource;
     }
 
-    public LiveData<String> addMealPlan(Long date, int slot, Recipe recipe) {
-        final MutableLiveData<String> result = new MutableLiveData<>();
+    public LiveData<Resource<String>> addMealPlan(Long date, int slot, Recipe recipe) {
+        final MutableLiveData<Resource<String>> result = new MutableLiveData<>();
+        result.postValue(Resource.loading(null));
 
         String username = sharedPreferences.getString("username", "");
         String hash = sharedPreferences.getString("hash", "");
@@ -176,12 +177,12 @@ public class AppRepository {
         call.enqueue(new Callback<AddMealPlanResponse>() {
             @Override
             public void onResponse(@NonNull Call<AddMealPlanResponse> call, @NonNull Response<AddMealPlanResponse> response) {
-                result.postValue("Success Add Meal Plan");
+                result.postValue(Resource.success("Success Add Meal Plan"));
             }
 
             @Override
             public void onFailure(@NonNull Call<AddMealPlanResponse> call, @NonNull Throwable t) {
-                result.postValue("Fail Add Meal Plan");
+                result.postValue(Resource.error("Fail Add Meal Plan", null));
             }
         });
 
