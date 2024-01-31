@@ -18,12 +18,21 @@ public class AddMealPlanViewModel extends ViewModel {
     private final AppRepository appRepository;
     private final MutableLiveData<Resource<List<Recipe>>> recipes = new MutableLiveData<>();
     private final MutableLiveData<Resource<String>> addMealPlanResult = new MutableLiveData<>();
+    private final MutableLiveData<String> query = new MutableLiveData<>("");
 
     public AddMealPlanViewModel(AppRepository appRepository) {
         this.appRepository = appRepository;
         searchRecipes("");
     }
-    public void searchRecipes(String query) {
+
+    public void setQuery(String newQuery) {
+        if (query.getValue() != null && !query.getValue().equals(newQuery)) {
+            query.postValue(newQuery);
+            searchRecipes(newQuery);
+        }
+    }
+
+    private void searchRecipes(String query) {
         appRepository.getRecipes(query).observeForever(recipes::postValue);
     }
 

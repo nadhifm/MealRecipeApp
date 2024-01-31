@@ -24,7 +24,7 @@ public class HomeViewModel extends ViewModel {
     }
 
     public void setQuery(String newQuery) {
-        if (query.getValue() != null &&!query.getValue().equals(newQuery) && !newQuery.equals("")) {
+        if (query.getValue() != null &&!query.getValue().equals(newQuery)) {
             query.postValue(newQuery);
             searchRecipes(newQuery);
         }

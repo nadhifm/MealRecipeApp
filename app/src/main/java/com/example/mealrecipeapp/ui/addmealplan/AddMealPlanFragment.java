@@ -38,6 +38,7 @@ import com.google.mlkit.vision.label.defaults.ImageLabelerOptions;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -69,6 +70,8 @@ public class AddMealPlanFragment extends Fragment {
                 .setNeutralButton("Cancel", (dialog, i) -> dialog.dismiss())
                 .setPositiveButton("Camera", (dialog, i) -> startCamera())
                 .setNegativeButton("Gallery", (dialog, i) -> startGallery()).show());
+
+        binding.backButton.setOnClickListener(v -> NavHostFragment.findNavController(this).navigateUp());
 
         setupIntent();
         setupRecyclerView();
@@ -116,7 +119,8 @@ public class AddMealPlanFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                addMealPlanViewModel.searchRecipes(charSequence.toString());
+                addMealPlanViewModel.setQuery(charSequence.toString());
+                addMealPlanAdapter.setRecipes(new ArrayList<>());
             }
 
             @Override
