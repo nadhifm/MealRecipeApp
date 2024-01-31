@@ -105,7 +105,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                homeViewModel.searchRecipes(charSequence.toString());
+                homeViewModel.setQuery(charSequence.toString());
             }
 
             @Override

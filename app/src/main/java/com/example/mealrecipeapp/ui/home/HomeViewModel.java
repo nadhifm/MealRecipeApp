@@ -1,5 +1,7 @@
 package com.example.mealrecipeapp.ui.home;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -9,21 +11,25 @@ import com.example.mealrecipeapp.data.repository.AppRepository;
 import com.example.mealrecipeapp.utils.Resource;
 
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.Objects;
 
 public class HomeViewModel extends ViewModel {
     private final AppRepository appRepository;
     private final MutableLiveData<Resource<List<Recipe>>> recipes = new MutableLiveData<>();
+    private final MutableLiveData<String> query = new MutableLiveData<>("");
 
     public HomeViewModel(AppRepository appRepository) {
         this.appRepository = appRepository;
         searchRecipes("");
     }
-    public void searchRecipes(String query) {
+
+    public void setQuery(String newQuery) {
+        if (query.getValue() != null &&!query.getValue().equals(newQuery) && !newQuery.equals("")) {
+            query.postValue(newQuery);
+            searchRecipes(newQuery);
+        }
+    }
+    private void searchRecipes(String query) {
         appRepository.getRecipes(query).observeForever(recipes::postValue);
     }
 
