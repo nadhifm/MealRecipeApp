@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Meal Recipe App</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="favorite">Favorite</string>
     <string name="serving">Serving</string>
     <string name="time">Time</string>
@@ -16,9 +15,18 @@
     <string name="lunch">Lunch</string>
     <string name="dinner">Dinner</string>
     <string name="sign_out">Sign Out</string>
-    <string name="sign_in">Sign In</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="ingredients">Ingredients</string>
     <string name="description">Description</string>
+    <string name="food_image">Food Image</string>
+    <string name="like">Like</string>
+    <string name="instructions">Instructions</string>
+    <string name="everyone_can_be_a_chef">Everyone can be a chef</string>
+    <string name="sign_in_with_google">Sign In With Google</string>
+    <string name="loading">Loading</string>
+    <string name="like_counts">%s likes</string>
+    <string name="time_counts">%s min</string>
+    <string name="serving_counts">%s servings</string>
+    <string name="hello_user">Hi, %s</string>
+    <string name="position">%s</string>
+    <string name="ingredient_information">%s %s %s</string>
 </resources>

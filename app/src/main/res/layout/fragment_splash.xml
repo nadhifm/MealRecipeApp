@@ -8,12 +8,12 @@
     android:gravity="center"
     tools:context=".ui.splash.SplashFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <ImageView
         android:id="@+id/imageView5"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/ic_app" />
+        android:src="@drawable/ic_app"
+        android:contentDescription="@string/app_name" />
 
     <TextView
         android:layout_width="wrap_content"
