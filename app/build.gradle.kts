@@ -89,4 +89,7 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
+
+    // RootBeer
+    implementation("com.scottyab:rootbeer-lib:0.1.0")
 }

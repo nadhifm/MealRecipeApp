@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.mealrecipeapp.MealRecipeApp
 import com.example.mealrecipeapp.databinding.FragmentProfileBinding
@@ -35,8 +36,11 @@ class ProfileFragment : Fragment() {
             .into(binding.userImageView)
         binding.signOutButton.setOnClickListener {
             profileViewModel.signOut()
-            NavHostFragment.findNavController(this)
-                .navigate(ProfileFragmentDirections.actionProfileFragmentToSignInFragment())
+            findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToSignInFragment())
+        }
+        binding.rootSwitch.isChecked = profileViewModel.getCheckRootSetting()
+        binding.rootSwitch.setOnCheckedChangeListener { _, isChecked ->
+            profileViewModel.setCheckRootSetting(isChecked)
         }
     }
 

@@ -10,8 +10,10 @@ import com.example.mealrecipeapp.data.remote.response.MealPlanValue
 import com.example.mealrecipeapp.data.remote.response.Recipe
 import com.example.mealrecipeapp.data.remote.response.RecipeInformation
 import com.google.android.gms.tasks.Task
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.scottyab.rootbeer.RootBeer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,9 +24,37 @@ import java.util.Locale
 class AppRepository(
     private val apiService: ApiService,
     private val sharedPreferences: SharedPreferences,
-    private val recipeDao: RecipeDao
+    private val recipeDao: RecipeDao,
+    private val firestoreDB: FirebaseFirestore,
+    private val rootBeer: RootBeer,
 ) {
-    private val firestoreDB = FirebaseFirestore.getInstance()
+
+    fun checkIsFirstTime() {
+        if (sharedPreferences.getBoolean("firstRun", true)) {
+            val editor = sharedPreferences.edit()
+            editor.putBoolean("firstRun", false)
+            editor.putBoolean("checkRooted", true)
+            editor.apply()
+        }
+    }
+    fun checkIsRooted(): Boolean {
+        val isRooted =  rootBeer.isRooted
+        if (isRooted) {
+            FirebaseCrashlytics.getInstance().recordException(Exception("Device Is Rooted"))
+        }
+        return isRooted
+    }
+
+    fun getCheckRootSetting(): Boolean {
+        return sharedPreferences.getBoolean("checkRooted", true)
+    }
+
+    fun setCheckRootSetting(isChecked: Boolean) {
+        val editor = sharedPreferences.edit()
+        editor.putBoolean("checkRooted", isChecked)
+        editor.apply()
+    }
+
     suspend fun saveUser(email: String, name: String, image: String): String {
         var resource = ""
         val editor = sharedPreferences.edit()

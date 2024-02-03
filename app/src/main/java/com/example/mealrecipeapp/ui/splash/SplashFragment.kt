@@ -1,5 +1,6 @@
 package com.example.mealrecipeapp.ui.splash
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.mealrecipeapp.MealRecipeApp
 import com.example.mealrecipeapp.databinding.FragmentSplashBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class SplashFragment : Fragment() {
     private var _binding: FragmentSplashBinding? = null
@@ -29,6 +31,25 @@ class SplashFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val appContainer = (requireActivity().application as MealRecipeApp).appContainer
         splashViewModel = ViewModelProvider(this, appContainer.viewModelFactory)[SplashViewModel::class.java]
+
+        splashViewModel.checkIsFirstTime()
+
+        if (splashViewModel.getCheckRootSetting()) {
+            if (splashViewModel.checkIsRooted()) {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("Your Device Is Rooted")
+                    .setOnCancelListener {
+                        checkUserEmail()
+                    }
+                    .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }
+                    .show()
+            }
+        }
+
+        checkUserEmail()
+    }
+
+    private fun checkUserEmail() {
         Handler(Looper.getMainLooper()).postDelayed({
             if (splashViewModel.checkUserEmail() == "Email") {
                 findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToSignInFragment())

@@ -9,6 +9,11 @@ class ProfileViewModel(private val appRepository: AppRepository) : ViewModel() {
     fun getUserName(): String = appRepository.getUserName()
     fun getUserEmail(): String = appRepository.getUserEmail()
     fun getUserImage(): String = appRepository.getUserImage()
+    fun getCheckRootSetting(): Boolean = appRepository.getCheckRootSetting()
+
+    fun setCheckRootSetting(isChecked: Boolean) {
+        appRepository.setCheckRootSetting(isChecked)
+    }
 
     fun signOut() {
         viewModelScope.launch {

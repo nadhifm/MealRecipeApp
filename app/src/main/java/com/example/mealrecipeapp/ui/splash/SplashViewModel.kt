@@ -7,4 +7,16 @@ class SplashViewModel(private val appRepository: AppRepository) : ViewModel() {
     fun checkUserEmail(): String {
         return appRepository.getUserEmail()
     }
+
+    fun checkIsRooted(): Boolean {
+        return appRepository.checkIsRooted()
+    }
+
+    fun getCheckRootSetting(): Boolean {
+        return appRepository.getCheckRootSetting()
+    }
+
+    fun checkIsFirstTime() {
+        return appRepository.checkIsFirstTime()
+    }
 }
