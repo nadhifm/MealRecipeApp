@@ -1,5 +1,8 @@
 package com.example.mealrecipeapp.data.remote.response
 
+import androidx.annotation.Keep
+
+@Keep
 class RecipeInformation(
     val id: Long,
     val title: String,

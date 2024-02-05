@@ -24,6 +24,11 @@ android {
 
     buildTypes {
         debug {
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
             firebaseAppDistribution {
                 artifactType = "APK"
                 releaseNotes = "App distribution from gradle file"
@@ -31,7 +36,7 @@ android {
             }
         }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
