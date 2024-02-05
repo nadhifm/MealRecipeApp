@@ -29,20 +29,33 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val appContainer = (requireActivity().application as MealRecipeApp).appContainer
         profileViewModel = ViewModelProvider(this, appContainer.viewModelFactory)[ProfileViewModel::class.java]
+
         binding.userNameTextView.text = profileViewModel.getUserName()
         binding.userEmailTextView.text = profileViewModel.getUserEmail()
         Glide.with(requireContext())
             .load(profileViewModel.getUserImage())
             .into(binding.userImageView)
+
         binding.signOutButton.setOnClickListener {
             profileViewModel.signOut()
             findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToSignInFragment())
         }
+
+        setupSwitch()
+    }
+
+    private fun setupSwitch() {
         binding.rootSwitch.isChecked = profileViewModel.getCheckRootSetting()
         binding.rootSwitch.setOnCheckedChangeListener { _, isChecked ->
             profileViewModel.setCheckRootSetting(isChecked)
         }
+
+        binding.emulatorSwitch.isChecked = profileViewModel.getCheckEmulatorSetting()
+        binding.emulatorSwitch.setOnCheckedChangeListener { _, isChecked ->
+            profileViewModel.setCheckEmulatorSetting(isChecked)
+        }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

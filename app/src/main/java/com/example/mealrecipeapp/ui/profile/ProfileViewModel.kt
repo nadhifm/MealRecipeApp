@@ -14,6 +14,11 @@ class ProfileViewModel(private val appRepository: AppRepository) : ViewModel() {
     fun setCheckRootSetting(isChecked: Boolean) {
         appRepository.setCheckRootSetting(isChecked)
     }
+    fun getCheckEmulatorSetting(): Boolean = appRepository.getCheckEmulatorSetting()
+
+    fun setCheckEmulatorSetting(isChecked: Boolean) {
+        appRepository.setCheckEmulatorSetting(isChecked)
+    }
 
     fun signOut() {
         viewModelScope.launch {

@@ -32,19 +32,42 @@ class SplashFragment : Fragment() {
         val appContainer = (requireActivity().application as MealRecipeApp).appContainer
         splashViewModel = ViewModelProvider(this, appContainer.viewModelFactory)[SplashViewModel::class.java]
 
+        checkRootAndEmulator()
+        checkUserEmail()
+    }
+
+    private fun checkRootAndEmulator() {
+        var isRooted = false
+        var isEmulator = false
+
         if (splashViewModel.getCheckRootSetting()) {
             if (splashViewModel.checkIsRooted()) {
-                MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Your Device Is Rooted")
-                    .setOnCancelListener {
-                        checkUserEmail()
-                    }
-                    .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }
-                    .show()
+                isRooted = true
             }
         }
 
-        checkUserEmail()
+        if (splashViewModel.getCheckEmulatorSetting()) {
+            if (splashViewModel.checkIsEmulator()) {
+                isEmulator = true
+            }
+        }
+
+        val message = if (isRooted && isEmulator) {
+            "Your Device Is Emulator and Rooted"
+        } else if (isRooted) {
+            "Your Device Is Rooted"
+        } else if (isEmulator) {
+            "Your Device Is Emulator"
+        } else {
+            ""
+        }
+
+        if (message != "") {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(message)
+                .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }
+                .show()
+        }
     }
 
     private fun checkUserEmail() {

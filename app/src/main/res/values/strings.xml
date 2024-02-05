@@ -30,4 +30,5 @@
     <string name="position">%s</string>
     <string name="ingredient_information">%s %s %s</string>
     <string name="check_root">Check Root</string>
+    <string name="check_emulator">Check Emulator</string>
 </resources>

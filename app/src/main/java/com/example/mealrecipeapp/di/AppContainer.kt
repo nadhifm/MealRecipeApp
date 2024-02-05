@@ -6,6 +6,7 @@ import com.example.mealrecipeapp.data.remote.network.ApiService
 import com.example.mealrecipeapp.data.repository.AppRepository
 import com.example.mealrecipeapp.ui.ViewModelFactory
 import com.example.mealrecipeapp.utils.Constants
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.firestore.FirebaseFirestore
 import com.scottyab.rootbeer.RootBeer
 import okhttp3.OkHttpClient
@@ -29,12 +30,14 @@ class AppContainer(appContext: Context) {
             .create(ApiService::class.java)
         val appDatabase = AppDatabase.getInstance(appContext)
         val firestoreDB = FirebaseFirestore.getInstance()
+        val crashlytics = FirebaseCrashlytics.getInstance()
         val rootBeer = RootBeer(appContext)
         val appRepository = AppRepository(
             apiService,
             sharedPreferences,
             appDatabase.recipeDao(),
             firestoreDB,
+            crashlytics,
             rootBeer,
         )
         viewModelFactory = ViewModelFactory(appRepository)

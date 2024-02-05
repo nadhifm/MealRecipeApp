@@ -15,4 +15,12 @@ class SplashViewModel(private val appRepository: AppRepository) : ViewModel() {
     fun getCheckRootSetting(): Boolean {
         return appRepository.getCheckRootSetting()
     }
+
+    fun checkIsEmulator(): Boolean {
+        return appRepository.checkIsEmulator()
+    }
+
+    fun getCheckEmulatorSetting(): Boolean {
+        return appRepository.getCheckEmulatorSetting()
+    }
 }
