@@ -28,15 +28,6 @@ class AppRepository(
     private val firestoreDB: FirebaseFirestore,
     private val rootBeer: RootBeer,
 ) {
-
-    fun checkIsFirstTime() {
-        if (sharedPreferences.getBoolean("firstRun", true)) {
-            val editor = sharedPreferences.edit()
-            editor.putBoolean("firstRun", false)
-            editor.putBoolean("checkRooted", true)
-            editor.apply()
-        }
-    }
     fun checkIsRooted(): Boolean {
         val isRooted =  rootBeer.isRooted
         if (isRooted) {

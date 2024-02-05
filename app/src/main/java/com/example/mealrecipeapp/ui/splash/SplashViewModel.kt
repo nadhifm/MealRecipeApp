@@ -15,8 +15,4 @@ class SplashViewModel(private val appRepository: AppRepository) : ViewModel() {
     fun getCheckRootSetting(): Boolean {
         return appRepository.getCheckRootSetting()
     }
-
-    fun checkIsFirstTime() {
-        return appRepository.checkIsFirstTime()
-    }
 }

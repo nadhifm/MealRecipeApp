@@ -32,8 +32,6 @@ class SplashFragment : Fragment() {
         val appContainer = (requireActivity().application as MealRecipeApp).appContainer
         splashViewModel = ViewModelProvider(this, appContainer.viewModelFactory)[SplashViewModel::class.java]
 
-        splashViewModel.checkIsFirstTime()
-
         if (splashViewModel.getCheckRootSetting()) {
             if (splashViewModel.checkIsRooted()) {
                 MaterialAlertDialogBuilder(requireContext())
