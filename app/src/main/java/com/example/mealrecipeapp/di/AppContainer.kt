@@ -33,6 +33,7 @@ class AppContainer(appContext: Context) {
         val crashlytics = FirebaseCrashlytics.getInstance()
         val rootBeer = RootBeer(appContext)
         val appRepository = AppRepository(
+            appContext,
             apiService,
             sharedPreferences,
             appDatabase.recipeDao(),

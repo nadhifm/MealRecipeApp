@@ -54,6 +54,11 @@ class ProfileFragment : Fragment() {
         binding.emulatorSwitch.setOnCheckedChangeListener { _, isChecked ->
             profileViewModel.setCheckEmulatorSetting(isChecked)
         }
+
+        binding.usbDebugSwitch.isChecked = profileViewModel.getCheckUSBDebugSetting()
+        binding.usbDebugSwitch.setOnCheckedChangeListener { _, isChecked ->
+            profileViewModel.setCheckUSBDebugSetting(isChecked)
+        }
     }
 
 

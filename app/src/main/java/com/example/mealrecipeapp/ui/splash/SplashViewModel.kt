@@ -23,4 +23,12 @@ class SplashViewModel(private val appRepository: AppRepository) : ViewModel() {
     fun getCheckEmulatorSetting(): Boolean {
         return appRepository.getCheckEmulatorSetting()
     }
+
+    fun checkIsUSBDebugEnable(): Boolean {
+        return appRepository.checkIsUSBDebugEnable()
+    }
+
+    fun getCheckUSBDebugSetting(): Boolean {
+        return appRepository.getCheckUSBDebugSetting()
+    }
 }

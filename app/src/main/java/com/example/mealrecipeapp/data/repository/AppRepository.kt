@@ -1,6 +1,8 @@
 package com.example.mealrecipeapp.data.repository
 
+import android.content.Context
 import android.content.SharedPreferences
+import android.provider.Settings
 import androidx.lifecycle.LiveData
 import com.example.mealrecipeapp.data.local.database.RecipeDao
 import com.example.mealrecipeapp.data.local.entity.RecipeEntity
@@ -23,6 +25,7 @@ import java.util.Date
 import java.util.Locale
 
 class AppRepository(
+    private val context: Context,
     private val apiService: ApiService,
     private val sharedPreferences: SharedPreferences,
     private val recipeDao: RecipeDao,
@@ -84,6 +87,7 @@ class AppRepository(
         }
         return false
     }
+
     fun checkIsEmulator(): Boolean {
         val isEmulator = (checkFiles(GENY_FILES)
                 || checkFiles(ANDY_FILES)
@@ -103,6 +107,23 @@ class AppRepository(
     fun setCheckEmulatorSetting(isChecked: Boolean) {
         val editor = sharedPreferences.edit()
         editor.putBoolean("checkEmulator", isChecked)
+        editor.apply()
+    }
+    fun checkIsUSBDebugEnable(): Boolean {
+        val isUSBDebugEnable = Settings.Secure.getInt(context.contentResolver, Settings.Global.ADB_ENABLED, 0) == 1
+        if (isUSBDebugEnable) {
+            crashlytics.recordException(Exception("USB Debugging Is Enable"))
+        }
+        return isUSBDebugEnable
+    }
+
+    fun getCheckUSBDebugSetting(): Boolean {
+        return sharedPreferences.getBoolean("checkUSBDebug", true)
+    }
+
+    fun setCheckUSBDebugSetting(isChecked: Boolean) {
+        val editor = sharedPreferences.edit()
+        editor.putBoolean("checkUSBDebug", isChecked)
         editor.apply()
     }
 

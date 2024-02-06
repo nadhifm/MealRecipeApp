@@ -1,6 +1,5 @@
 package com.example.mealrecipeapp.ui.splash
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -32,13 +31,14 @@ class SplashFragment : Fragment() {
         val appContainer = (requireActivity().application as MealRecipeApp).appContainer
         splashViewModel = ViewModelProvider(this, appContainer.viewModelFactory)[SplashViewModel::class.java]
 
-        checkRootAndEmulator()
+        checkSystem()
         checkUserEmail()
     }
 
-    private fun checkRootAndEmulator() {
+    private fun checkSystem() {
         var isRooted = false
         var isEmulator = false
+        var isUSBDebugEnable = false
 
         if (splashViewModel.getCheckRootSetting()) {
             if (splashViewModel.checkIsRooted()) {
@@ -52,19 +52,28 @@ class SplashFragment : Fragment() {
             }
         }
 
-        val message = if (isRooted && isEmulator) {
-            "Your Device Is Emulator and Rooted"
-        } else if (isRooted) {
-            "Your Device Is Rooted"
-        } else if (isEmulator) {
-            "Your Device Is Emulator"
-        } else {
-            ""
+        if (splashViewModel.getCheckUSBDebugSetting()) {
+            if (splashViewModel.checkIsUSBDebugEnable()) {
+                isUSBDebugEnable = true
+            }
+        }
+
+        var message = ""
+
+        if (isRooted) {
+            message += "\n - Your Device Is Rooted"
+        }
+        if (isEmulator) {
+            message += "\n - Your Device Is Emulator"
+        }
+        if (isUSBDebugEnable) {
+            message += "\n - USB Debugging Is Enable"
         }
 
         if (message != "") {
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle(message)
+                .setTitle("Information")
+                .setMessage(message + "\n")
                 .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }
                 .show()
         }

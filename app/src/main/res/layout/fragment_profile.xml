@@ -48,6 +48,12 @@
         android:layout_height="wrap_content"
         android:text="@string/check_emulator"/>
 
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/usbDebugSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/check_usb_debugging"/>
+
     <Button
         android:id="@+id/signOutButton"
         android:layout_width="match_parent"
