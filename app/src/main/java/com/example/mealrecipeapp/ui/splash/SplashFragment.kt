@@ -39,23 +39,22 @@ class SplashFragment : Fragment() {
         var isRooted = false
         var isEmulator = false
         var isUSBDebugEnable = false
+        var isAccessibilityEnable = false
 
         if (splashViewModel.getCheckRootSetting()) {
-            if (splashViewModel.checkIsRooted()) {
-                isRooted = true
-            }
+            isRooted = splashViewModel.checkIsRooted()
         }
 
         if (splashViewModel.getCheckEmulatorSetting()) {
-            if (splashViewModel.checkIsEmulator()) {
-                isEmulator = true
-            }
+            isEmulator = splashViewModel.checkIsEmulator()
         }
 
         if (splashViewModel.getCheckUSBDebugSetting()) {
-            if (splashViewModel.checkIsUSBDebugEnable()) {
-                isUSBDebugEnable = true
-            }
+            isUSBDebugEnable = splashViewModel.checkIsUSBDebugEnable()
+        }
+
+        if (splashViewModel.getCheckAccessibilitySetting()) {
+            isAccessibilityEnable = splashViewModel.checkIsAccessibilityEnable()
         }
 
         var message = ""
@@ -68,6 +67,9 @@ class SplashFragment : Fragment() {
         }
         if (isUSBDebugEnable) {
             message += "\n - USB Debugging Is Enable"
+        }
+        if (isAccessibilityEnable) {
+            message += "\n - Accessibility Service Is Enable"
         }
 
         if (message != "") {

@@ -32,4 +32,5 @@
     <string name="check_root">Check Root</string>
     <string name="check_emulator">Check Emulator</string>
     <string name="check_usb_debugging">Check USB Debugging</string>
+    <string name="check_accessibility_service">Check Accessibility Service</string>
 </resources>

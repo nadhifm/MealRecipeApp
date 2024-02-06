@@ -3,6 +3,7 @@ package com.example.mealrecipeapp.data.repository
 import android.content.Context
 import android.content.SharedPreferences
 import android.provider.Settings
+import android.view.accessibility.AccessibilityManager
 import androidx.lifecycle.LiveData
 import com.example.mealrecipeapp.data.local.database.RecipeDao
 import com.example.mealrecipeapp.data.local.entity.RecipeEntity
@@ -23,6 +24,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+
 
 class AppRepository(
     private val context: Context,
@@ -109,6 +111,7 @@ class AppRepository(
         editor.putBoolean("checkEmulator", isChecked)
         editor.apply()
     }
+
     fun checkIsUSBDebugEnable(): Boolean {
         val isUSBDebugEnable = Settings.Secure.getInt(context.contentResolver, Settings.Global.ADB_ENABLED, 0) == 1
         if (isUSBDebugEnable) {
@@ -124,6 +127,25 @@ class AppRepository(
     fun setCheckUSBDebugSetting(isChecked: Boolean) {
         val editor = sharedPreferences.edit()
         editor.putBoolean("checkUSBDebug", isChecked)
+        editor.apply()
+    }
+
+    fun checkIsAccessibilityEnable(): Boolean {
+        val am = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+        val isAccessibilityEnabled = am.isEnabled
+        if (isAccessibilityEnabled) {
+            crashlytics.recordException(Exception("Accessibility Service Is Enable"))
+        }
+        return isAccessibilityEnabled
+    }
+
+    fun getCheckAccessibilitySetting(): Boolean {
+        return sharedPreferences.getBoolean("checkAccessibility", true)
+    }
+
+    fun setCheckAccessibilitySetting(isChecked: Boolean) {
+        val editor = sharedPreferences.edit()
+        editor.putBoolean("checkAccessibility", isChecked)
         editor.apply()
     }
 

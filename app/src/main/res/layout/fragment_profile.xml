@@ -54,6 +54,12 @@
         android:layout_height="wrap_content"
         android:text="@string/check_usb_debugging"/>
 
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/accessibilitySwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/check_accessibility_service"/>
+
     <Button
         android:id="@+id/signOutButton"
         android:layout_width="match_parent"

@@ -27,6 +27,12 @@ class ProfileViewModel(private val appRepository: AppRepository) : ViewModel() {
         appRepository.setCheckUSBDebugSetting(isChecked)
     }
 
+    fun getCheckAccessibilitySetting(): Boolean = appRepository.getCheckAccessibilitySetting()
+
+    fun setCheckAccessibilitySetting(isChecked: Boolean) {
+        appRepository.setCheckAccessibilitySetting(isChecked)
+    }
+
     fun signOut() {
         viewModelScope.launch {
             appRepository.deleteUser()

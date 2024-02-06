@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.mealrecipeapp.MealRecipeApp
@@ -58,6 +57,11 @@ class ProfileFragment : Fragment() {
         binding.usbDebugSwitch.isChecked = profileViewModel.getCheckUSBDebugSetting()
         binding.usbDebugSwitch.setOnCheckedChangeListener { _, isChecked ->
             profileViewModel.setCheckUSBDebugSetting(isChecked)
+        }
+
+        binding.accessibilitySwitch.isChecked = profileViewModel.getCheckAccessibilitySetting()
+        binding.accessibilitySwitch.setOnCheckedChangeListener { _, isChecked ->
+            profileViewModel.setCheckAccessibilitySetting(isChecked)
         }
     }
 
