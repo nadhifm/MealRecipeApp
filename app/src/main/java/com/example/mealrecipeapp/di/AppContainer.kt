@@ -1,6 +1,10 @@
 package com.example.mealrecipeapp.di
 
 import android.content.Context
+import android.security.keystore.KeyGenParameterSpec
+import android.security.keystore.KeyProperties
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKeys
 import com.example.mealrecipeapp.data.local.database.AppDatabase
 import com.example.mealrecipeapp.data.remote.network.ApiService
 import com.example.mealrecipeapp.data.repository.AppRepository
@@ -17,8 +21,14 @@ import retrofit2.converter.gson.GsonConverterFactory
 class AppContainer(appContext: Context) {
     var viewModelFactory: ViewModelFactory
     init {
-        val sharedPreferences =
-            appContext.getSharedPreferences("UserPreferences", Context.MODE_PRIVATE)
+        val masterKey = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
+        val sharedPreferences = EncryptedSharedPreferences.create(
+            "UserPreferences",
+            masterKey,
+            appContext,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
         val okHttpClient: OkHttpClient = OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             .build()

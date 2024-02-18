@@ -97,4 +97,11 @@ dependencies {
 
     // RootBeer
     implementation("com.scottyab:rootbeer-lib:0.1.0")
+
+    // Security
+    implementation("androidx.security:security-crypto:1.0.0")
+
+    // Sqlcipher
+    implementation("net.zetetic:android-database-sqlcipher:4.4.0")
+    implementation("androidx.sqlite:sqlite-ktx:2.4.0")
 }
