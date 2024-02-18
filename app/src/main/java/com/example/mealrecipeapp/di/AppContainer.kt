@@ -13,6 +13,7 @@ import com.example.mealrecipeapp.utils.Constants
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.firestore.FirebaseFirestore
 import com.scottyab.rootbeer.RootBeer
+import okhttp3.CertificatePinner
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -29,8 +30,13 @@ class AppContainer(appContext: Context) {
             EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         )
+        val certificatePinner = CertificatePinner.Builder()
+            .add(Constants.HOST_NAME, "sha256/W6J4ex0vdEdkZXYlbT7/sVA9aR8RcOO37SBzufjYm74=")
+            .add(Constants.HOST_NAME, "sha256/gXt8eql7Nvp+svrQamO0cZpK91jL0O4/02R0igpwscg=")
+            .build()
         val okHttpClient: OkHttpClient = OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+            .certificatePinner(certificatePinner)
             .build()
         val apiService = Retrofit.Builder()
             .baseUrl(Constants.API_BASE_URL)
