@@ -21,6 +21,7 @@ import com.scottyab.rootbeer.RootBeer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -54,28 +55,49 @@ class AppRepository(
         editor.apply()
     }
 
-    private fun checkEmulatorProps(): Boolean {
-        val props = listOf(
-            "init.svc.qemud",
-            "init.svc.qemu-props",
-            "qemu.hw.mainkeys",
-            "qemu.sf.fake_camera",
-            "qemu.sf.lcd_density"
-        )
-        return props.any { propertyExists(it) }
-    }
-
-    private fun propertyExists(propertyName: String): Boolean {
-        return try {
-            val process = Runtime.getRuntime().exec("getprop $propertyName")
-            process.inputStream.bufferedReader().readText().isNotEmpty()
-        } catch (e: Exception) {
-            false
+    private val genyFiles = arrayOf(
+        "/dev/socket/genyd",
+        "/dev/socket/baseband_genyd"
+    )
+    private val pipes = arrayOf(
+        "/dev/socket/qemud",
+        "/dev/qemu_pipe"
+    )
+    private val x86Files = arrayOf(
+        "ueventd.android_x86.rc",
+        "x86.prop",
+        "ueventd.ttVM_x86.rc",
+        "init.ttVM_x86.rc",
+        "fstab.ttVM_x86",
+        "fstab.vbox86",
+        "init.vbox86.rc",
+        "ueventd.vbox86.rc"
+    )
+    private val andyFiles = arrayOf(
+        "fstab.andy",
+        "ueventd.andy.rc"
+    )
+    private val noxFiles = arrayOf(
+        "fstab.nox",
+        "init.nox.rc",
+        "ueventd.nox.rc"
+    )
+    private fun checkFiles(targets: Array<String>): Boolean {
+        for (pipe in targets) {
+            val file = File(pipe)
+            if (file.exists()) {
+                return true
+            }
         }
+        return false
     }
 
     fun checkIsEmulator(): Boolean {
-        val isEmulator = checkEmulatorProps()
+        val isEmulator = (checkFiles(genyFiles)
+                || checkFiles(andyFiles)
+                || checkFiles(noxFiles)
+                || checkFiles(x86Files)
+                || checkFiles(pipes))
         if (isEmulator) {
             crashlytics.recordException(Exception("Device Is Emulator"))
         }
