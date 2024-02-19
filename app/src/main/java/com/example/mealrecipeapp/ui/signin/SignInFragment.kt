@@ -2,6 +2,7 @@ package com.example.mealrecipeapp.ui.signin
 
 import android.app.Activity.RESULT_OK
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,6 +33,8 @@ class SignInFragment : Fragment() {
 
     private val auth = FirebaseAuth.getInstance()
 
+    private lateinit var loadingDialog: LoadingDialog
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,6 +49,8 @@ class SignInFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val appContainer = (requireActivity().application as MealRecipeApp).appContainer
         signInViewModel = ViewModelProvider(this, appContainer.viewModelFactory)[SignInViewModel::class.java]
+
+        loadingDialog = LoadingDialog(requireContext())
 
         val gso = GoogleSignInOptions.Builder()
             .requestIdToken(Constants.GOOGLE_CLIENT_ID)
@@ -67,24 +72,31 @@ class SignInFragment : Fragment() {
                         .addOnCompleteListener(requireActivity()) { credentialTask ->
                             if (credentialTask.isSuccessful) {
                                 signInViewModel.saveUser()
-                                googleSignInClient.signOut()
                             } else {
+                                loadingDialog.dismiss()
                                 Toast.makeText(requireContext(), "Error: Authentication Failed", Toast.LENGTH_SHORT).show()
                             }
                         }
                 } catch (e: ApiException) {
+                    loadingDialog.dismiss()
                     Toast.makeText(requireContext(), "Error : ${e.message}", Toast.LENGTH_LONG).show()
                 }
+            } else {
+                loadingDialog.dismiss()
             }
+
+            googleSignInClient.signOut()
         }
 
         binding.signInButton.iconTint = null
         binding.signInButton.setOnClickListener {
+            loadingDialog.show()
             launcher.launch(signInGoogleIntent)
         }
 
         binding.signInGithubButton.iconTint = null
         binding.signInGithubButton.setOnClickListener {
+            loadingDialog.show()
             signInWithGithub()
         }
 
@@ -102,6 +114,7 @@ class SignInFragment : Fragment() {
                     signInViewModel.saveUser()
                 }
                 .addOnFailureListener {
+                    loadingDialog.dismiss()
                     Toast.makeText(requireContext(), "Error : $it", Toast.LENGTH_LONG).show()
                 }
         } else {
@@ -110,13 +123,13 @@ class SignInFragment : Fragment() {
                     signInViewModel.saveUser()
                 }
                 .addOnFailureListener {
+                    loadingDialog.dismiss()
                     Toast.makeText(requireContext(), "Error : $it", Toast.LENGTH_LONG).show()
                 }
         }
     }
 
     private fun observeSignInResult() {
-        val loadingDialog = LoadingDialog(requireContext())
         signInViewModel.signInResult.observe(viewLifecycleOwner) { resource->
             when (resource) {
                 is Resource.Success -> {
@@ -129,7 +142,7 @@ class SignInFragment : Fragment() {
                     Toast.makeText(activity, resource.message, Toast.LENGTH_SHORT).show()
                 }
 
-                is Resource.Loading -> loadingDialog.show()
+                is Resource.Loading -> {}
             }
         }
     }

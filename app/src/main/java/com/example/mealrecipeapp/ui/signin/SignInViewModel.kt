@@ -15,10 +15,8 @@ class SignInViewModel(private val appRepository: AppRepository) : ViewModel() {
         get() = _signInResult
     fun saveUser() {
         viewModelScope.launch {
-            _signInResult.postValue(Resource.Loading())
             try {
                 val message = appRepository.saveUser()
-                delay(800L)
                 _signInResult.postValue(Resource.Success(message))
             } catch (e: Exception) {
                 _signInResult.postValue(Resource.Error(e.message.toString()))
