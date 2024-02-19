@@ -10,6 +10,7 @@ import com.example.mealrecipeapp.data.remote.network.ApiService
 import com.example.mealrecipeapp.data.repository.AppRepository
 import com.example.mealrecipeapp.ui.ViewModelFactory
 import com.example.mealrecipeapp.utils.Constants
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.firestore.FirebaseFirestore
 import com.scottyab.rootbeer.RootBeer
@@ -47,6 +48,7 @@ class AppContainer(appContext: Context) {
         val appDatabase = AppDatabase.getInstance(appContext)
         val firestoreDB = FirebaseFirestore.getInstance()
         val crashlytics = FirebaseCrashlytics.getInstance()
+        val auth = FirebaseAuth.getInstance()
         val rootBeer = RootBeer(appContext)
         val appRepository = AppRepository(
             appContext,
@@ -55,6 +57,7 @@ class AppContainer(appContext: Context) {
             appDatabase.recipeDao(),
             firestoreDB,
             crashlytics,
+            auth,
             rootBeer,
         )
         viewModelFactory = ViewModelFactory(appRepository)

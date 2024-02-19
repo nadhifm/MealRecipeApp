@@ -1,31 +1,28 @@
 package com.example.mealrecipeapp.ui.signin
 
+import android.app.Activity.RESULT_OK
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.credentials.CredentialManager
-import androidx.credentials.GetCredentialRequest
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.mealrecipeapp.MealRecipeApp
 import com.example.mealrecipeapp.databinding.FragmentSignInBinding
 import com.example.mealrecipeapp.ui.dialog.LoadingDialog
+import com.example.mealrecipeapp.utils.Constants
 import com.example.mealrecipeapp.utils.Resource
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.android.gms.tasks.Task
-import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
-import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import com.google.firebase.auth.AuthResult
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.OAuthProvider
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+
 
 class SignInFragment : Fragment() {
     private var _binding: FragmentSignInBinding? = null
@@ -33,13 +30,15 @@ class SignInFragment : Fragment() {
 
     private lateinit var signInViewModel: SignInViewModel
 
-    private val job = Job()
-    private val ioScope = CoroutineScope(Dispatchers.IO + job)
+    private val auth = FirebaseAuth.getInstance()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSignInBinding.inflate(inflater, container, false)
+
+
         return binding.root
     }
 
@@ -48,33 +47,41 @@ class SignInFragment : Fragment() {
         val appContainer = (requireActivity().application as MealRecipeApp).appContainer
         signInViewModel = ViewModelProvider(this, appContainer.viewModelFactory)[SignInViewModel::class.java]
 
-        val credentialManager: CredentialManager = CredentialManager.create(requireContext())
-        val googleIdOption: GetSignInWithGoogleOption = GetSignInWithGoogleOption
-            .Builder("347653735490-n45emv6v7jdvat65jc48gruihov3ct37.apps.googleusercontent.com")
+        val gso = GoogleSignInOptions.Builder()
+            .requestIdToken(Constants.GOOGLE_CLIENT_ID)
             .build()
-        val request: GetCredentialRequest = GetCredentialRequest
-            .Builder()
-            .addCredentialOption(googleIdOption)
-            .build()
+
+        val googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
+
+        val signInGoogleIntent = googleSignInClient.signInIntent
+
+        val launcher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            if (result.resultCode == RESULT_OK) {
+                val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                try {
+                    val account = task.getResult(ApiException::class.java)
+                    val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+                    auth.signInWithCredential(credential)
+                        .addOnCompleteListener(requireActivity()) { credentialTask ->
+                            if (credentialTask.isSuccessful) {
+                                signInViewModel.saveUser()
+                            } else {
+                                Toast.makeText(requireContext(), "Error: Authentication Failed", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                } catch (e: ApiException) {
+                    Toast.makeText(requireContext(), "Error : ${e.message}", Toast.LENGTH_LONG).show()
+                }
+            }
+
+            googleSignInClient.signOut()
+        }
 
         binding.signInButton.iconTint = null
         binding.signInButton.setOnClickListener {
-            ioScope.launch {
-                val result = credentialManager.getCredential(
-                    requireContext(),
-                    request
-                )
-                val credentialData = result.credential.data
-                val googleIdTokenCredential =
-                    GoogleIdTokenCredential.createFrom(credentialData)
-                val email = googleIdTokenCredential.id
-                val name = googleIdTokenCredential.displayName ?: ""
-                var image = ""
-                if (googleIdTokenCredential.profilePictureUri != null) {
-                    image = googleIdTokenCredential.profilePictureUri.toString()
-                }
-                signInViewModel.saveUser(email, name, image)
-            }
+            launcher.launch(signInGoogleIntent)
         }
 
         binding.signInGithubButton.iconTint = null
@@ -86,33 +93,24 @@ class SignInFragment : Fragment() {
     }
 
     private fun signInWithGithub() {
-        val auth = FirebaseAuth.getInstance()
-
         val provider = OAuthProvider.newBuilder("github.com")
         provider.scopes = listOf("user:email")
 
-        // There's something already here! Finish the sign-in for your user.
         val pendingResultTask = auth.pendingAuthResult
         if (pendingResultTask != null) {
             pendingResultTask
                 .addOnSuccessListener {
-                    // User is signed in.
-                    Toast.makeText(requireContext(), "User exist", Toast.LENGTH_LONG).show()
+                    signInViewModel.saveUser()
                 }
                 .addOnFailureListener {
-                    // Handle failure.
                     Toast.makeText(requireContext(), "Error : $it", Toast.LENGTH_LONG).show()
                 }
         } else {
-            auth.startActivityForSignInWithProvider( requireActivity(), provider.build())
+            auth.startActivityForSignInWithProvider(requireActivity(), provider.build())
                 .addOnSuccessListener {
-                    val email = it.user?.email ?: ""
-                    val name = it.user?.displayName ?: ""
-                    val image = it.user?.photoUrl.toString()
-                    signInViewModel.saveUser(email, name, image)
+                    signInViewModel.saveUser()
                 }
                 .addOnFailureListener {
-                    // Handle failure.
                     Toast.makeText(requireContext(), "Error : $it", Toast.LENGTH_LONG).show()
                 }
         }
@@ -138,7 +136,6 @@ class SignInFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        job.cancel()
         super.onDestroyView()
         _binding = null
     }

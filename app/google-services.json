@@ -12,7 +12,20 @@
           "package_name": "com.example.mealrecipeapp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "804406643636-lom032um6mef2enh4e0rh0lbt6j248q7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mealrecipeapp",
+            "certificate_hash": "1a574c32963e26e60165ceeeb2c160b1d2692ff5"
+          }
+        },
+        {
+          "client_id": "804406643636-vgficofkqvdq62k249kcuqs72u4u2orv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyADVCqrAWdt2CwEfXz39oPrKVBsvEng-mo"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "804406643636-vgficofkqvdq62k249kcuqs72u4u2orv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

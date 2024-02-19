@@ -13,6 +13,7 @@ import com.example.mealrecipeapp.data.remote.response.MealPlanValue
 import com.example.mealrecipeapp.data.remote.response.Recipe
 import com.example.mealrecipeapp.data.remote.response.RecipeInformation
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -32,6 +33,7 @@ class AppRepository(
     private val recipeDao: RecipeDao,
     private val firestoreDB: FirebaseFirestore,
     private val crashlytics: FirebaseCrashlytics,
+    private val auth: FirebaseAuth,
     private val rootBeer: RootBeer,
 ) {
     fun checkIsRooted(): Boolean {
@@ -127,93 +129,86 @@ class AppRepository(
         editor.apply()
     }
 
-    suspend fun saveUser(email: String, name: String, image: String): String {
-        var resource = ""
-        val editor = sharedPreferences.edit()
-        val docRef = firestoreDB.collection("users").document(
-            email
-        )
-        // check data in firestore
-        docRef.get().addOnCompleteListener { task: Task<DocumentSnapshot> ->
-            if (task.isSuccessful) {
-                val document = task.result
-                if (document.exists()) {
-                    // data exist in firestore
-                    // save data user to shared preferences
-                    editor.putString("email", email)
-                    editor.putString("name", name)
-                    editor.putString("image", image)
-                    editor.putString("username", document.getString("username"))
-                    editor.putString("hash", document.getString("hash"))
-                    editor.apply()
-                    resource = "Success Sign In"
-                } else {
-                    // data not exist in firestore
-                    // create data user from api
-                    CoroutineScope(Dispatchers.IO).launch {
-                        val call = apiService.connectUser()
-                        if (call.isSuccessful) {
-                            call.body()?.let {
-                                // success create data user from api
-                                // save data user to firestore
-                                val user: MutableMap<String, Any> = HashMap()
-                                user["username"] = it.username
-                                user["hash"] = it.hash
-                                docRef.set(user)
-                                    .addOnSuccessListener { _ ->
-                                        // success save data user to firestore
-                                        // save data user to shared preferences
-                                        editor.putString("email", email)
-                                        editor.putString("name", name)
-                                        editor.putString("image", image)
-                                        editor.putString("username", it.username)
-                                        editor.putString("hash", it.hash)
-                                        editor.apply()
-                                        resource = "Success Sign In"
-                                    }
-                                    .addOnFailureListener {
-                                        resource = "Fail Sign In"
-                                    }
+    suspend fun saveUser(): String {
+        val currentUser = auth.currentUser
+
+        if (currentUser != null && currentUser.email != null) {
+            val editor = sharedPreferences.edit()
+            val docRef = firestoreDB.collection("users").document(
+                currentUser.email ?: ""
+            )
+            // check data in firestore
+            docRef.get().addOnCompleteListener { task: Task<DocumentSnapshot> ->
+                if (task.isSuccessful) {
+                    val document = task.result
+                    if (document.exists()) {
+                        editor.putString("username", document.getString("username"))
+                        editor.putString("hash", document.getString("hash"))
+                        editor.apply()
+                    } else {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            val call = apiService.connectUser()
+                            if (call.isSuccessful) {
+                                call.body()?.let {
+                                    // success create data user from api
+                                    // save data user to firestore
+                                    val user: MutableMap<String, Any> = HashMap()
+                                    user["username"] = it.username
+                                    user["hash"] = it.hash
+                                    docRef.set(user)
+                                        .addOnSuccessListener { _ ->
+                                            editor.putString("username", it.username)
+                                            editor.putString("hash", it.hash)
+                                            editor.apply()
+                                        }
+                                        .addOnFailureListener {
+                                            throw Exception("Fail Sign In")
+                                        }
+                                }
+                            } else {
+                                throw Exception("Fail Sign In")
                             }
-                        } else {
-                            resource = "Fail Sign In"
                         }
                     }
+                } else {
+                    throw Exception("Fail Sign In")
                 }
-            } else {
-                resource = "Fail Sign In"
             }
+        } else {
+            throw Exception("Fail Sign In")
         }
-        return resource
+
+        return "Success Sign In"
     }
 
     suspend fun deleteUser() {
+        auth.signOut()
         val editor = sharedPreferences.edit()
-        editor.remove("email")
-        editor.remove("name")
+        editor.remove("username")
+        editor.remove("hash")
         editor.apply()
         recipeDao.deleteAll()
     }
 
     fun getUserEmail(): String {
-        sharedPreferences.getString("email", "Email")?.let {
-            return it
+        auth.currentUser?.let {
+            return it.email ?: "Email"
         } ?: kotlin.run {
             return "Email"
         }
     }
 
     fun getUserName(): String {
-        sharedPreferences.getString("name", "Name")?.let {
-            return it
+        auth.currentUser?.let {
+            return it.displayName ?: "Name"
         } ?: kotlin.run {
             return "Name"
         }
     }
 
     fun getUserImage(): String {
-        sharedPreferences.getString("image", "")?.let {
-            return it
+        auth.currentUser?.let {
+            return it.photoUrl.toString()
         } ?: kotlin.run {
             return ""
         }

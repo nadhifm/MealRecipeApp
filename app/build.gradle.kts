@@ -64,6 +64,7 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore:24.10.1")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("com.google.firebase:firebase-auth:22.3.1")
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -72,11 +73,6 @@ dependencies {
     val navVersion = "2.7.6"
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
-
-    // Google Sign In
-    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.0")
-    implementation("androidx.credentials:credentials:1.2.0")
-    implementation("androidx.credentials:credentials-play-services-auth:1.2.0")
 
     // Glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
