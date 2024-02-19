@@ -67,6 +67,7 @@ class SignInFragment : Fragment() {
                         .addOnCompleteListener(requireActivity()) { credentialTask ->
                             if (credentialTask.isSuccessful) {
                                 signInViewModel.saveUser()
+                                googleSignInClient.signOut()
                             } else {
                                 Toast.makeText(requireContext(), "Error: Authentication Failed", Toast.LENGTH_SHORT).show()
                             }
@@ -75,8 +76,6 @@ class SignInFragment : Fragment() {
                     Toast.makeText(requireContext(), "Error : ${e.message}", Toast.LENGTH_LONG).show()
                 }
             }
-
-            googleSignInClient.signOut()
         }
 
         binding.signInButton.iconTint = null
