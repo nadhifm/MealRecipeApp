@@ -42,11 +42,14 @@ class MealPlanFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val appContainer = (requireActivity().application as MealRecipeApp).appContainer
         mealPlanViewModel = ViewModelProvider(this, appContainer.viewModelFactory)[MealPlanViewModel::class.java]
-        binding.dateTextView.setOnClickListener { v: View? ->
-            datePicker.show(
-                requireActivity().supportFragmentManager,
-                "date-picker"
-            )
+        binding.dateTextView.setOnClickListener {
+            val dialogDatePicker = requireActivity().supportFragmentManager.findFragmentByTag("date-picker")
+            if (dialogDatePicker == null) {
+                datePicker.show(
+                    requireActivity().supportFragmentManager,
+                    "date-picker"
+                )
+            }
         }
         binding.leftButton.setOnClickListener { v: View? -> mealPlanViewModel.setPrevDate() }
         binding.rightButton.setOnClickListener { v: View? -> mealPlanViewModel.setNextDate() }
